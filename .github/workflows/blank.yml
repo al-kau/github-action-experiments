@@ -1,0 +1,27 @@
+name: "Uno-project check"
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  #build:
+  check:
+    runs-on: windows-latest
+    env: 
+      DotNetVersion: '7.0.x'
+      UnoCheck_Version: '1.11.2'
+      UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
+
+    steps:
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ parameters.DotNetVersion }}
+        
+    - name: PowerShell script
+      shell: pwsh
+      run: |
+        & dotnet tool update --global uno.check --version ${{ parameters.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
+    
