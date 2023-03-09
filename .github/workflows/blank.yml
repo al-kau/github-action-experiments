@@ -18,7 +18,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ parameters.DotNetVersion }}
+        dotnet-version: ${{ env.DotNetVersion }}
         
     - name: PowerShell script
       shell: pwsh
