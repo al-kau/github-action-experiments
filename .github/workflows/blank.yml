@@ -23,5 +23,5 @@ jobs:
     - name: PowerShell script
       shell: pwsh
       run: |
-        & dotnet tool update --global uno.check --version ${{ parameters.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
+        & dotnet tool update --global uno.check --version ${{ env.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
     
