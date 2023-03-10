@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: windows-latest
     env: 
-      dotnet-ver: '7.0.x'
+      dotnet-version: '7.0.x'
       #UnoCheck_Version: '1.11.2'
       #UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
 
@@ -18,16 +18,12 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.dotnet-ver }}
+        dotnet-version: ${{ env.dotnet-version }}
         
     - name: Update uno.check
-      shell: pwsh
-      run: |
-        & dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
+      run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
     - name: Run uno.check
-      shell: pwsh
-      run: |
-        & uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
+      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
     
