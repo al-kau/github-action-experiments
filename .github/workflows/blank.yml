@@ -23,7 +23,7 @@ jobs:
     - name: Update uno.check
       shell: pwsh
       run: |
-        & dotnet tool update --global uno.check --version ${{ env.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
+        & dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
     - name: Run uno.check
       shell: pwsh
