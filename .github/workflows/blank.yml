@@ -33,14 +33,11 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
         
-    - name: Build Windows
-      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
-        
-    - name: Update uno.check
-      run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
+    #- name: Update uno.check
+    #  run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
-    - name: Run uno.check
-      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
+    #- name: Run uno.check
+    #  run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
     - name: Build Wasm
       run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
@@ -59,3 +56,4 @@ jobs:
       
     - name: Build Windows
       run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
+
