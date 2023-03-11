@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: windows-latest
     env: 
-      dotnet-version: '7.0.x'
+      dotnet-version: '7.0.102'
       wasm-project: 'Uno.App/Uno.App/Uno.App.Wasm/Uno.App.Wasm.csproj'
       android-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
       ios-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
@@ -39,6 +39,9 @@ jobs:
     #- name: Run uno.check
     #  run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
+    - name: Build Windows
+      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
+   
     - name: Build Wasm
       run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
       
@@ -53,7 +56,4 @@ jobs:
 
     - name: Build GTK
       run: dotnet build ${{ env.gtk-project }} -c ${{ env.configuration }} -p:Platform=x64 
-      
-    - name: Build Windows
-      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
-
+  
