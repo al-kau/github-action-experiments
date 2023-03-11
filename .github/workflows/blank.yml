@@ -34,7 +34,7 @@ jobs:
         dotnet-version: ${{ env.dotnet-version }}
         
     - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v1.3.1
+      uses: microsoft/setup-msbuild@v1
       
     - name: Update uno.check
       run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json --nologo
@@ -43,7 +43,7 @@ jobs:
       run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
     - name: Build Windows
-      run: msbuild ${{ env.win-project }} -nologo -restore -verbosity:minimal -property:Configuration=${{ env.configuration }} -property:Platform=x64  
+      run: msbuild ${{ env.win-project }} -nologo -restore -verbosity:normal -property:Configuration=${{ env.configuration }} -property:Platform=x64  
    
     - name: Build Wasm
       run: dotnet build ${{ env.wasm-project }} --nologo --configuration ${{ env.configuration }}
