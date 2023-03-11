@@ -17,8 +17,8 @@ jobs:
       gtk-project: 'Uno.App/Uno.App/Uno.App.Skia.Gtk/Uno.App.Skia.Gtk.csproj'
       win-project: 'Uno.App/Uno.App/Uno.App.Windows/Uno.App.Windows.csproj'
       configuration: Debug
-      #UnoCheck_Version: '1.11.2'
-      #UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
+      #uno-check-version: '1.11.2'
+      uno-check-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
 
     steps:
     - name: Checkout
@@ -33,11 +33,11 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
         
-    #- name: Update uno.check
-    #  run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
+    - name: Update uno.check
+      run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
-    #- name: Run uno.check
-    #  run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
+    - name: Run uno.check
+      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac --manifest ${{ env.uno-check-manifest }}
    
     - name: Build Windows
       run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
