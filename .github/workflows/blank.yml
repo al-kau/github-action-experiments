@@ -33,6 +33,9 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
         
+    - name: Build Windows
+      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
+        
     - name: Update uno.check
       run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
