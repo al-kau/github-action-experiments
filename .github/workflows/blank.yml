@@ -33,8 +33,8 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
         
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2    
+    - name: Setup msbuild
+      uses: microsoft/setup-msbuild@v1.3.1
       
     - name: Update uno.check
       run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
@@ -43,20 +43,20 @@ jobs:
       run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
     - name: Build Windows
-      run: msbuild ${{ env.win-project }} /r /p:Configuration=${{ env.configuration }} -p:Platform=x64 
+      run: msbuild ${{ env.win-project }} -nologo -restore -verbosity:minimal -property:Configuration=${{ env.configuration }} -property:Platform=x64  
    
     - name: Build Wasm
-      run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
+      run: dotnet build ${{ env.wasm-project }} --nologo --configuration ${{ env.configuration }}
       
     - name: Build Android
-      run: dotnet build ${{ env.android-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-android 
+      run: dotnet build ${{ env.android-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-android 
       
     - name: Build iOS
-      run: dotnet build ${{ env.ios-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-ios 
+      run: dotnet build ${{ env.ios-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-ios 
       
     - name: Build Mac
-      run: dotnet build ${{ env.mac-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-maccatalyst 
+      run: dotnet build ${{ env.mac-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-maccatalyst 
 
     - name: Build GTK
-      run: dotnet build ${{ env.gtk-project }} -c ${{ env.configuration }} -p:Platform=x64 
+      run: dotnet build ${{ env.gtk-project }} --nologo --configuration ${{ env.configuration }} -property:Platform=x64 
   
