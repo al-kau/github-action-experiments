@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: windows-latest
     env: 
-      dotnet-version: '7.0.102'
+      dotnet-version: '7.0.x'
       wasm-project: 'Uno.App/Uno.App/Uno.App.Wasm/Uno.App.Wasm.csproj'
       android-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
       ios-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
@@ -18,7 +18,7 @@ jobs:
       win-project: 'Uno.App/Uno.App/Uno.App.Windows/Uno.App.Windows.csproj'
       configuration: Debug
       #uno-check-version: '1.11.2'
-      uno-check-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
+      #uno-check-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
 
     steps:
     - name: Checkout
@@ -33,14 +33,17 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
         
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2    
+      
     - name: Update uno.check
       run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
     
     - name: Run uno.check
-      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac --manifest ${{ env.uno-check-manifest }}
+      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
     - name: Build Windows
-      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
+      run: msbuild ${{ env.win-project }} /r /p:Configuration=${{ env.configuration }} -p:Platform=x64 
    
     - name: Build Wasm
       run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
