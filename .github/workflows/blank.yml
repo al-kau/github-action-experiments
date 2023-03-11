@@ -11,6 +11,11 @@ jobs:
     env: 
       dotnet-version: '7.0.x'
       wasm-project: 'Uno.App/Uno.App/Uno.App.Wasm/Uno.App.Wasm.csproj'
+      android-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
+      ios-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
+      mac-project: 'Uno.App/Uno.App/Uno.App.Mobile/Uno.App.Mobile.csproj'
+      gtk-project: 'Uno.App/Uno.App/Uno.App.Skia.Gtk/Uno.App.Skia.Gtk.csproj'
+      win-project: 'Uno.App/Uno.App/Uno.App.Windows/Uno.App.Windows.csproj'
       configuration: Debug
       #UnoCheck_Version: '1.11.2'
       #UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
@@ -36,3 +41,18 @@ jobs:
    
     - name: Build Wasm
       run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
+      
+    - name: Build Android
+      run: dotnet build ${{ env.android-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-android 
+      
+    - name: Build iOS
+      run: dotnet build ${{ env.ios-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-ios 
+      
+    - name: Build Mac
+      run: dotnet build ${{ env.mac-project }} -c ${{ env.configuration }} -p:TargetFramework=net7.0-maccatalyst 
+
+    - name: Build GTK
+      run: dotnet build ${{ env.gtk-project }} -c ${{ env.configuration }} -p:Platform=x64 
+      
+    - name: Build Windows
+      run: dotnet build ${{ env.win-project }} -c ${{ env.configuration }} -p:Platform=x64 
