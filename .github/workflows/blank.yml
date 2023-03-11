@@ -10,10 +10,18 @@ jobs:
     runs-on: windows-latest
     env: 
       dotnet-version: '7.0.x'
+      wasm-project: 'Uno.App/Uno.App/Uno.App.Wasm/Uno.App.Wasm.csproj'
+      configuration: Debug
       #UnoCheck_Version: '1.11.2'
       #UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+    
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
@@ -26,4 +34,5 @@ jobs:
     - name: Run uno.check
       run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
    
-    
+    - name: Build Wasm
+      run: dotnet build ${{ env.wasm-project }} -c ${{ env.configuration }}
