@@ -1,0 +1,12 @@
+name: "Test"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+     
+    steps:
+    - name: Setup msbuild
+      run: echo "$SHELL"
