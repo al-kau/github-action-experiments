@@ -1,0 +1,19 @@
+name: Setup Uno Platform
+description: Sets up the Uno Platform and dependencies
+inputs:
+  uno-manifest:
+    description: 'Alternative uno-check manifest file path or URL'
+    required: false
+    default: 'https://raw.githubusercontent.com/unoplatform/uno.check/main/manifests/uno.ui.manifest.json'
+  uno-check-version:
+    description: 'uno-check version'
+    required: false
+    default: '1.11.2'
+runs:
+  using: "composite"
+  steps:
+    - name: Update uno.check
+      run: dotnet tool update --global uno.check --version ${{ inputs.uno-check-version }} --add-source https://api.nuget.org/v3/index.json
+    
+    - name: Run uno.check
+      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac --manifest ${{ inputs.uno-manifest }}
