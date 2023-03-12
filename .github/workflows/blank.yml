@@ -27,7 +27,6 @@ jobs:
         fetch-depth: 0
         submodules: recursive
     
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
@@ -36,12 +35,9 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
       
-    - name: Update uno.check
-      run: dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
+    - name: Setup the Uno Platform
+      uses: ./.github/actions/setup-uno-platform
     
-    - name: Run uno.check
-      run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac
-   
     - name: Build Windows
       run: msbuild ${{ env.win-project }} -nologo -restore -verbosity:normal -property:Configuration=${{ env.configuration }} -property:Platform=x64  
    
