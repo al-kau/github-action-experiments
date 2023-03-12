@@ -1,4 +1,4 @@
-name: Setup Uno Platform
+name: Setup the Uno Platform
 description: Sets up the Uno Platform and dependencies
 inputs:
   uno-manifest:
@@ -14,6 +14,8 @@ runs:
   steps:
     - name: Update uno.check
       run: dotnet tool update --global uno.check --version ${{ inputs.uno-check-version }} --add-source https://api.nuget.org/v3/index.json
+      shell: pwsh
     
     - name: Run uno.check
       run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac --manifest ${{ inputs.uno-manifest }}
+      shell: pwsh
