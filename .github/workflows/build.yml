@@ -4,9 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  #build:
-  check:
+  build:
     runs-on: windows-latest
     env: 
       dotnet-version: '7.0.x'
