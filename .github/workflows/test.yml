@@ -4,9 +4,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-win:
     runs-on: windows-latest
      
     steps:
-    - name: Setup msbuild
+    - name: Shell name
+      run: echo "$SHELL"
+      
+  test-ubuntu:
+    runs-on: ubuntu-latest
+     
+    steps:
+    - name: Shell name
+      run: echo "$SHELL"
+      
+  test-macos:
+    runs-on: macos-latest
+     
+    steps:
+    - name: Shell name
       run: echo "$SHELL"
