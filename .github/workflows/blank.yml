@@ -80,7 +80,7 @@ jobs:
     - name: Build GTK
       uses: ./.github/actions/build-uno-project
       with:
-        project-file: ${{ env.mac-project }}
+        project-file: ${{ env.gtk-project }}
         project-configuration: ${{ env.configuration }}
         build-properties: -property:Platform=x64
         builder-type: dotnet
