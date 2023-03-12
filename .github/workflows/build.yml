@@ -18,9 +18,7 @@ jobs:
       gtk-project: 'Uno.App/Uno.App/Uno.App.Skia.Gtk/Uno.App.Skia.Gtk.csproj'
       win-project: 'Uno.App/Uno.App/Uno.App.Windows/Uno.App.Windows.csproj'
       configuration: Debug
-      #uno-check-version: '1.11.2'
-      #uno-check-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/8f116f7fe73eb4ed527670a1738695e6f3da8856/manifests/uno.ui.manifest.json'
-
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -45,6 +43,3 @@ jobs:
         project-file: ${{ env.solution-file }}
         project-configuration: ${{ env.configuration }}
         builder-type: msbuild
-   
-    - name: Test
-      run: help
