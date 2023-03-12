@@ -26,12 +26,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: msbuild
+    - name: Build with msbuild
       if: ${{ inputs.builder-type == 'msbuild' }}
       run: msbuild ${{ inputs.project-file }} -nologo -restore -verbosity:normal -property:Configuration=${{ inputs.project-configuration }} ${{ inputs.build-properties }}
       shell: pwsh
       
-    - name: dotnet
+    - name: Build with dotnet
       if: ${{ inputs.builder-type == 'dotnet' }}
       run: dotnet build ${{ inputs.project-file }} --nologo --configuration ${{ inputs.project-configuration }} ${{ inputs.build-properties }}
       shell: bash
