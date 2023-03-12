@@ -1,4 +1,4 @@
-name: "Uno-project check"
+name: "Build solution"
 
 on:
   workflow_dispatch:
@@ -37,22 +37,50 @@ jobs:
       
     - name: Setup the Uno Platform
       uses: ./.github/actions/setup-uno-platform
-    
+      
     - name: Build Windows
-      run: msbuild ${{ env.win-project }} -nologo -restore -verbosity:normal -property:Configuration=${{ env.configuration }} -property:Platform=x64  
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.win-project }}
+        project-configuration: ${{ env.configuration }}
+        build-properties: -property:Platform=x64
+        builder-type: msbuild
    
     - name: Build Wasm
-      run: dotnet build ${{ env.wasm-project }} --nologo --configuration ${{ env.configuration }}
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.wasm-project }}
+        project-configuration: ${{ env.configuration }}
+        builder-type: dotnet
       
     - name: Build Android
-      run: dotnet build ${{ env.android-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-android 
-      
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.android-project }}
+        project-configuration: ${{ env.configuration }}
+        build-properties: -property:TargetFramework=net7.0-android
+        builder-type: dotnet      
+     
     - name: Build iOS
-      run: dotnet build ${{ env.ios-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-ios 
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.ios-project }}
+        project-configuration: ${{ env.configuration }}
+        build-properties: -property:TargetFramework=net7.0-ios
+        builder-type: dotnet       
+ 
+    - name: Build MacOS
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.mac-project }}
+        project-configuration: ${{ env.configuration }}
+        build-properties: -property:TargetFramework=net7.0-maccatalyst
+        builder-type: dotnet  
       
-    - name: Build Mac
-      run: dotnet build ${{ env.mac-project }} --nologo --configuration ${{ env.configuration }} -property:TargetFramework=net7.0-maccatalyst 
-
     - name: Build GTK
-      run: dotnet build ${{ env.gtk-project }} --nologo --configuration ${{ env.configuration }} -property:Platform=x64 
-  
+      uses: ./.github/actions/build-uno-project
+      with:
+        project-file: ${{ env.mac-project }}
+        project-configuration: ${{ env.configuration }}
+        build-properties: -property:Platform=x64
+        builder-type: dotnet
