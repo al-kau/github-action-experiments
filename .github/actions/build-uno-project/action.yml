@@ -1,0 +1,72 @@
+name: Build the Uno project
+description: 
+inputs:
+  solution-name:
+    description: 'Defines the build configuration'
+    required: true
+    type: string
+  solution-root:
+    description: 'Defines the build configuration'
+    required: true
+    type: string
+  project-configuration:
+    description: 'Defines the build configuration'
+    required: false
+    type: string
+    default: Debug
+  builder-type:
+    description: 'Defines which builder is used to build the project'
+    required: false
+    type: choice
+    default: 'msbuild'
+    options: 
+    - msbuild
+    - dotnet
+  target:
+    description: 'Defines the build target platform'
+    required: false
+    type: choice
+    default: 'default'
+    options: 
+    - all
+    - default
+    - android
+    - gtk
+    - ios
+    - macos
+    - wasm
+    - win
+runs:
+  using: "composite"
+  steps:
+    - name: Build with msbuild
+      id: build-initializer
+      run: |
+        case ${{ inputs.target }} in
+          android)
+            ;;
+          gtk)
+            ;;
+          ios)
+            ;;
+          macos)
+            ;;
+          wasm)
+            ;;
+          win)
+            ;;              
+          *)
+            echo 'project-file=${{ inputs.solution-root }}/${{ inputs.solution-name }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
+            ;;
+        esac
+
+      
+    - name: Build All
+      uses: ./.github/actions/build-project
+      with:
+        project-file: ${{ steps.build-initializer.outputs.project-file }}
+        project-configuration: ${{ inputs.project-configuration }}
+        build-properties: ${{ steps.build-initializer.outputs.build-properties }}
+        builder-type: ${{ steps.build-initializer.outputs.builder-type }}      
