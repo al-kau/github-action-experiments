@@ -48,7 +48,8 @@ jobs:
         uno-check-version: '1.5.0'
         uno-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/main/manifests/uno.ui.manifest.json'
 
-    - id: init-projects
+    - name: Initialize project file paths
+      id: init-projects
       uses: ./.github/actions/project-map
       with:
         solution-file: "${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}"
