@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
     steps:
-      - run: echo "${{ matrix }}"
+      - run: echo "(${{ matrix.project }}; ${{ matrix.config }})"
 
   test-win:
     runs-on: windows-latest
