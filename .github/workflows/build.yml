@@ -4,13 +4,44 @@ on:
   workflow_dispatch:
 
 jobs:
+  configure:
+    runs-on: ubuntu-latest
+    env:
+      name: Uno.App
+      root-dirictory: Uno.App
+      project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
+    outputs:
+      projects-map: ${{ steps.set-projects.outputs.result }}
+    steps:
+      - id: set-projects
+        run: |
+          result=$(cat << EOF
+            {
+              "solution":"${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}",
+              "android":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "gtk":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
+              "ios":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "macos":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "wasm":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
+              "windows":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
+            }
+          EOF
+          )
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "$result" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
   build:
+    needs: configure
     runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        configuration: [ Debug ]
+        project: [ default ]
+
     env: 
       dotnet-version: '7.0.x'
-      solution-name: 'Uno.App'
-      solution-root: 'Uno.App'
-      configuration: Debug
+      projects-map: ${{ needs.configure.outputs.projects-map }}
       
     steps:
     - name: Checkout
@@ -33,7 +64,6 @@ jobs:
     - name: Build All
       uses: ./.github/actions/build-uno-project
       with:
-        solution-name: ${{ env.solution-name }}
-        solution-root: ${{ env.solution-root }}
+        projects-map: ${{ env.projects-map }}
         configuration: ${{ env.configuration }}
         target: 'default'
