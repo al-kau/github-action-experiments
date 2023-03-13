@@ -35,6 +35,6 @@ jobs:
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
-      - run: echo "${{properties.prop1}}|${{properties.prop2}}"
+      - run: echo "${{env.properties.prop1}}|${{env.properties.prop2}}"
 
  
