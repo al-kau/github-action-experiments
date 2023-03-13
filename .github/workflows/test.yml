@@ -11,6 +11,12 @@ jobs:
     - name: Shell name
       run: echo "$SHELL"
       
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+      
     - name: My test
       uses: ./.github/actions/my-test
       with:
@@ -23,6 +29,12 @@ jobs:
     steps:
     - name: Shell name
       run: echo "$SHELL"
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive      
       
     - name: My test
       uses: ./.github/actions/my-test
@@ -37,6 +49,12 @@ jobs:
     steps:
     - name: Shell name
       run: echo "$SHELL"
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive      
       
     - name: My test
       uses: ./.github/actions/my-test
