@@ -13,15 +13,17 @@ runs:
     - id: set-version
       if: ${{ inputs.uno-check-version != null && inputs.uno-check-version != '' }}
       run: echo 'cli-arg=${{ format("--version {0}", inputs.uno-check-version) }}' >> $GITHUB_OUTPUT
+      shell: bash
       
     - id: set-manifest
       if: ${{ inputs.uno-manifest != null && inputs.uno-manifest != '' }}
-      run: echo 'cli-arg=--manifest ${{ inputs.uno-manifest }}' >> $GITHUB_OUTPUT      
+      run: echo 'cli-arg=--manifest ${{ inputs.uno-manifest }}' >> $GITHUB_OUTPUT
+      shell: bash
       
     - name: Update uno.check
       run: dotnet tool update --global uno.check ${{ steps.set-version.outputs.cli-arg }} --add-source https://api.nuget.org/v3/index.json
-      shell: pwsh
+      shell: bash
     
     - name: Run uno.check
       run: uno-check -v --ci --non-interactive --fix --skip androidsdk --skip androidemulator --skip xcode --skip gtk3 --skip vswin --skip vsmac ${{ steps.set-manifest.outputs.cli-arg }}
-      shell: pwsh
+      shell: bash
