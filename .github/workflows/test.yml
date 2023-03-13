@@ -35,6 +35,6 @@ jobs:
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
-      - run: echo "${{ fromJSON(env.properties.prop1) }}|${{ fromJSON(env.properties.prop2) }}"
+      - run: echo "${{ fromJSON(env.properties).prop1 }}|${{ fromJSON(env.properties).prop2 }}"
 
  
