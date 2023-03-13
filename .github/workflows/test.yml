@@ -8,16 +8,22 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      properties: ${{ steps.set-properties.outputs.properties }}
     steps:
       - id: set-matrix
         run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+        
+      - id: set-properties
+        run: echo 'properties={"prop1":"val1", "prop2":"val2"}' >> $GITHUB_OUTPUT
   job2:
     needs: job1
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
     steps:
-      - run: echo "(${{ matrix.project }}; ${{ matrix.config }})"
+      - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
+      - run: echo "properties (${{ needs.job1.outputs.properties }})"
+      - run: echo "fromJSON(properties) fromJSON(${{ needs.job1.outputs.properties }})"
 
   test-win:
     runs-on: windows-latest
