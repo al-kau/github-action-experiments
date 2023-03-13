@@ -66,6 +66,9 @@ jobs:
       
     - name: Setup the Uno Platform
       uses: ./.github/actions/setup-uno-platform
+      with:
+        uno-check-version: '1.5.0'
+        uno-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/main/manifests/uno.ui.manifest.json'
       
     - name: Build
       uses: ./.github/actions/build-uno-project
