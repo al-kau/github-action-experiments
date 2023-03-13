@@ -1,0 +1,20 @@
+name: My test
+inputs:
+  var1:
+    required: true
+    type: string
+  var2:
+    required: true
+    type: string
+  var3:
+    required: false
+    type: string
+    default: '${{ inputs.var1 }}/${{ inputs.var2 }}'
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Result
+      shell: bash
+      run: echo "result: ${{ inputs.var3 }}"
+      
