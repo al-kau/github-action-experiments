@@ -15,14 +15,15 @@ jobs:
         
       - id: set-properties
         run: |
-          properties=$(cat << END
-          {
-            "prop1":"var1",
-            "prop2":"var2"
-          }
+          props=$(cat << END
+            {
+              "prop1":"var1",
+              "prop2":"var2"
+            }
           END
           )
-          echo 'properties=$properties' >> $GITHUB_OUTPUT
+          echo 'json $props'
+          echo 'properties=$props' >> $GITHUB_OUTPUT
   job2:
     needs: job1
     runs-on: ubuntu-latest
