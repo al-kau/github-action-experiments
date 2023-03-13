@@ -9,7 +9,7 @@ inputs:
     description: 'Defines path to root directory'
     required: true
     type: string
-  project-configuration:
+  configuration:
     description: 'Defines the build configuration'
     required: false
     type: string
@@ -37,32 +37,32 @@ inputs:
     description: 'Android project file to build
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   ios-project-file:
     description: 'iOS project file to build'
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   macos-project-file:
     description: 'MacOS project file to build'
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   gtk-project-file:
     description: 'GTK project file to build'
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
   wasm-project-file:
     description: 'Wasm project file to build'
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
   win-project-file:
     description: 'Windows project file to build'
       required: false
       type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
 runs:
   using: "composite"
   steps:
@@ -111,6 +111,6 @@ runs:
       uses: ./.github/actions/build-project
       with:
         project-file: ${{ steps.build-initializer.outputs.project-file }}
-        project-configuration: ${{ inputs.project-configuration }}
+        project-configuration: ${{ inputs.configuration }}
         build-properties: ${{ steps.build-initializer.outputs.build-properties }}
         builder-type: ${{ steps.build-initializer.outputs.builder-type }}      
