@@ -1,6 +1,6 @@
 name: Project file map
 
-description: Sets up the Uno Platform and dependencies
+description: Sets project file map
 
 inputs:
   solution-file:
@@ -38,7 +38,8 @@ inputs:
     type: string
     required: true
 outputs:
-  project-map: ${{ steps.init-projects.outputs.map }}
+  project-map:
+    value: ${{ steps.init-projects.outputs.map }}
 runs:
   using: "composite"
   
