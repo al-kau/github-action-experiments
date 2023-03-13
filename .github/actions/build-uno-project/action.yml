@@ -33,7 +33,7 @@ inputs:
     description: 'The solution file to build'
      required: false
      type: string
-     default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
+     # default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
   android-project-file:
     description: 'Android project file to build
     required: false
