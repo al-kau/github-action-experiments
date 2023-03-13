@@ -12,7 +12,7 @@ runs:
   steps:
     - id: set-version
       if: ${{ inputs.uno-check-version != null && inputs.uno-check-version != '' }}
-      run: echo 'cli-arg=--version ${{ inputs.uno-check-version) }}' >> $GITHUB_OUTPUT
+      run: echo 'cli-arg=--version ${{ inputs.uno-check-version }}' >> $GITHUB_OUTPUT
       shell: bash
       
     - id: set-manifest
