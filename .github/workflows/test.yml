@@ -23,7 +23,7 @@ jobs:
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
-      - run: echo "fromJSON(properties) fromJSON(${{ needs.job1.outputs.properties }})"
+      - run: echo "fromJSON(properties) ${{ fromJSON(needs.job1.outputs.properties) }}"
 
   test-win:
     runs-on: windows-latest
