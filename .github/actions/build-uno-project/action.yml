@@ -1,12 +1,8 @@
 name: Build the Uno project
 description: 
 inputs:
-  solution-name:
-    description: 'Solution name'
-    required: true
-    type: string
-  solution-root:
-    description: 'Defines path to root directory'
+  projects-map:
+    description: 'Json with project files'
     required: true
     type: string
   configuration:
@@ -29,41 +25,6 @@ inputs:
     - win-x64
     - win-x86
     - win-arm64
-  solution-file:
-    description: 'The solution file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
-  android-project-file:
-    description: 'Android project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
-  ios-project-file:
-    description: 'iOS project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
-  macos-project-file:
-    description: 'MacOS project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
-  gtk-project-file:
-    description: 'GTK project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
-  wasm-project-file:
-    description: 'Wasm project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
-  win-project-file:
-    description: 'Windows project file to build'
-    required: false
-    type: string
-    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
 runs:
   using: "composite"
   steps:
@@ -73,47 +34,47 @@ runs:
       run: |
         case ${{ inputs.target }} in
           android)
-            echo 'project-file=${{ inputs.android-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).android }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:TargetFramework=net7.0-android' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
             ;;
           gtk)
-            echo 'project-file=${{ inputs.gtk-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).gtk }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           ios)
-            echo 'project-file=${{ inputs.ios-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).ios }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:TargetFramework=net7.0-ios' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           macos)
-            echo 'project-file=${{ inputs.macos-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).macos }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:TargetFramework=net7.0-maccatalyst' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           wasm)
-            echo 'project-file=${{ inputs.wasm-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).wasm }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
             ;;
           win-x64)
-            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).windows }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:Platform=x64' >> $GITHUB_OUTPUT
-            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
             ;;
           win-x86)
-            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).windows }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:Platform=x86' >> $GITHUB_OUTPUT
-            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
             ;;
           win-arm64)
-            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).windows }}' >> $GITHUB_OUTPUT
             echo 'build-properties=-property:Platform=arm64' >> $GITHUB_OUTPUT
-            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
             ;;            
           *)
-            echo 'project-file=${{ inputs.solution-file }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ fromJSON(inputs.projects-map).solution }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
             echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
             ;;
