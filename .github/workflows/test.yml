@@ -35,6 +35,6 @@ jobs:
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
       - run: |
           object=${{ fromJSON(needs.job1.outputs.properties) }} 
-          echo "$object.prop1|$object.prop2"
+          echo "${object.prop1}|${object.prop2}"
 
  
