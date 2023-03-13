@@ -17,7 +17,7 @@ jobs:
       - id: set-matrix
         run: echo "matrix={\"include\":[{\"target\":\"default\",\"configuration\":\"Debug\"},{\"target\":\"ios\",\"configuration\":\"Release\"}]}" >> $GITHUB_OUTPUT
         
-      - id: set-properties
+      - id: set-projects
         run: |
           result=$(cat << EOF
             {
