@@ -69,6 +69,7 @@ runs:
   steps:
     - name: Build with msbuild
       id: build-initializer
+      shell: bash
       run: |
         case ${{ inputs.target }} in
           android)
