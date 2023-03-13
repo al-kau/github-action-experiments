@@ -35,7 +35,7 @@ inputs:
     type: string
     default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
   android-project-file:
-    description: 'Android project file to build
+    description: 'Android project file to build'
     required: false
     type: string
     default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
