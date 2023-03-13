@@ -36,8 +36,8 @@ jobs:
     
     strategy:
       matrix:
-        configuration: [ Debug ]
-        target: [ default ]
+        configuration: [ Debug, Release ]
+        target: [ android, gtk, ios, macos, wasm, win-x64, win-x86, win-arm64 ]
 
     env: 
       dotnet-version: '7.0.x'
@@ -63,7 +63,7 @@ jobs:
     - name: Setup the Uno Platform
       uses: ./.github/actions/setup-uno-platform
       
-    - name: Build All
+    - name: Build
       uses: ./.github/actions/build-uno-project
       with:
         projects-map: ${{ env.projects-map }}
