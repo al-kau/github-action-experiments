@@ -31,39 +31,39 @@ inputs:
     - win-arm64
   solution-file:
     description: 'The solution file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
+     required: false
+     type: string
+     default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
   android-project-file:
     description: 'Android project file to build
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   ios-project-file:
     description: 'iOS project file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   macos-project-file:
     description: 'MacOS project file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
   gtk-project-file:
     description: 'GTK project file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
   wasm-project-file:
     description: 'Wasm project file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
   win-project-file:
     description: 'Windows project file to build'
-      required: false
-      type: string
-      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
+    required: false
+    type: string
+    default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
 runs:
   using: "composite"
   steps:
