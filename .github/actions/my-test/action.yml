@@ -16,6 +16,7 @@ runs:
   steps:
     - name: define
       id: path-definer
+      shell: bash
       run: echo 'result-path=${{ inputs.var1 }}/${{ inputs.var2 }}' >> $GITHUB_OUTPUT
   
   
