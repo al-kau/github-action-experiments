@@ -33,6 +33,8 @@ jobs:
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
-      - run: echo "fromJSON(properties) ${{ fromJSON(needs.job1.outputs.properties).prop1 }}"
+      - id: parser
+        run: echo "object=${{ fromJSON(needs.job1.outputs.properties) }}" >> $GITHUB_OUTPUT
+      - run: echo "${{ steps.parser.outputs.object.prop1 }}|${{ steps.parser.outputs.object.prop2 }}"
 
  
