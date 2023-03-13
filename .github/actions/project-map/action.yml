@@ -4,37 +4,37 @@ description: Sets project file map
 
 inputs:
   solution-file:
-    description: 'Solution file path'
+    description: Solution file path
     type: string
     required: true
 
   android-project-file:
-    description: 'Android project file path'
+    description: Android project file path
     type: string
     required: true
     
   gtk-project-file:
-    description: 'GTK project file path'
+    description: GTK project file path
     type: string
     required: true
 
   ios-project-file:
-    description: 'iOS project file path'
+    description: iOS project file path
     type: string
     required: true
     
   macos-project-file:
-    description: 'MacOS project file path'
+    description: MacOS project file path
     type: string
     required: true
     
   wasm-project-file:
-    description: 'Wasm project file path'
+    description: Wasm project file path
     type: string
     required: true
 
   windows-project-file:
-    description: 'Windows project file path'
+    description: Windows project file path
     type: string
     required: true
 outputs:
