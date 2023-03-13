@@ -36,4 +36,4 @@ jobs:
         solution-name: ${{ env.solution-name }}
         solution-root: ${{ env.solution-root }}
         configuration: ${{ env.configuration }}
-        target: 'all'
+        target: 'default'
