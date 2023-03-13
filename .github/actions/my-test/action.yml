@@ -9,12 +9,16 @@ inputs:
   var3:
     required: false
     type: string
-    default: '${{ inputs.var1 }}/${{ inputs.var2 }}'
+    default: ''
     
 runs:
   using: "composite"
   steps:
+    - name: define
+      id: path-definer
+      run: echo 'result-path=${{ inputs.var1 }}/${{ inputs.var2 }}' >> $GITHUB_OUTPUT
+  
+  
     - name: Result
       shell: bash
-      run: echo "result: ${{ inputs.var3 }}"
-      
+      run: echo "path: ${{ steps.path-definer.outputs.result-path }}"
