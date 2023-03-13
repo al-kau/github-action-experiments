@@ -24,7 +24,7 @@ jobs:
           submodules: recursive
     
       - id: init-projects
-        uses: ./.github/action/project-map
+        uses: ./.github/actions/project-map
         with:
           solution-file: "${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}"
           android-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
