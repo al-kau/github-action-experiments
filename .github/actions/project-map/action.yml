@@ -44,6 +44,7 @@ runs:
   
   steps:
     - id: init-projects
+      shell: bash
       run: |
         map=$(cat << EOF
           {
