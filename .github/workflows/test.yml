@@ -1,12 +1,17 @@
-name: "Test"
+name: "Git Action Test"
 
 on:
   workflow_dispatch:
 
 jobs:
-  job1:
+  configure:
     runs-on: ubuntu-latest
+    env:
+      name: Uno.App
+      root-dirictory: Uno.App
+      project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
     outputs:
+      projects-map: ${{ steps.set-projects.outputs.result }}
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       properties: ${{ steps.set-properties.outputs.properties }}
     steps:
@@ -17,24 +22,44 @@ jobs:
         run: |
           properties=$(cat << EOF
             {
-              "prop1":"var1",
-              "prop2":"var2"
+              "solution":"${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}",
+              "android":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "gtk":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
+              "ios":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "macos":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+              "wasm":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
+              "windows":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
             }
           EOF
           )
           echo "properties<<EOF" >> $GITHUB_OUTPUT
           echo "$properties" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-  job2:
-    needs: job1
+  test-process:
+    needs: configure
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.configure.outputs.matrix) }}
     env:
-      properties: ${{ needs.job1.outputs.properties }}
+      properties: ${{ needs.configure.outputs.properties }}
+      dotnet-version: '7.0.x'
+      configuration: ${{ matrix.configuration }}
+      target: ${{ matrix.target }}
+      projects-map: ${{ needs.configure.outputs.projects-map }}
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
-      - run: echo "properties (${{ needs.job1.outputs.properties }})"
       - run: echo "${{ fromJSON(env.properties).prop1 }}|${{ fromJSON(env.properties).prop2 }}"
-
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          
+      - name: Build All
+        uses: ./.github/actions/build-uno-project
+        with:
+          projects-map: ${{ env.projects-map }}
+          configuration: ${{ env.configuration }}
+          target: ${{ env.target }}
  
