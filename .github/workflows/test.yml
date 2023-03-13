@@ -11,6 +11,12 @@ jobs:
     - name: Shell name
       run: echo "$SHELL"
       
+    - name: My test
+      uses: ./.github/actions/my-test
+      with:
+        var1: "a"
+        var2: "b"
+      
   test-ubuntu:
     runs-on: ubuntu-latest
      
@@ -18,9 +24,22 @@ jobs:
     - name: Shell name
       run: echo "$SHELL"
       
+    - name: My test
+      uses: ./.github/actions/my-test
+      with:
+        var1: "a"
+        var2: "b"
+        var3: "c"
+      
   test-macos:
     runs-on: macos-latest
      
     steps:
     - name: Shell name
       run: echo "$SHELL"
+      
+    - name: My test
+      uses: ./.github/actions/my-test
+      with:
+        var1: "a"
+        var2: "b"
