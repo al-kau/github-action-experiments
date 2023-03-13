@@ -15,11 +15,11 @@ runs:
   using: "composite"
   steps:
     - name: define
-      id: path-definer
+      id: pathdefiner
       shell: bash
-      run: echo 'result-path=${{ inputs.var1 }}/${{ inputs.var2 }}' >> $GITHUB_OUTPUT
+      run: echo 'resultpath=${{ inputs.var1 }}/${{ inputs.var2 }}' >> $GITHUB_OUTPUT
   
   
     - name: Result
       shell: bash
-      run: echo "path: ${{ steps.path-definer.outputs.result-path }}"
+      run: echo 'path: ${{ steps.pathdefiner.outputs.resultpath }}'
