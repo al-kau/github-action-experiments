@@ -20,14 +20,15 @@ inputs:
     type: choice
     default: 'default'
     options: 
-    - all
     - default
     - android
     - gtk
     - ios
     - macos
     - wasm
-    - win
+    - win-x64
+    - win-x86
+    - win-arm64
   solution-file:
     description: 'The solution file to build'
       required: false
@@ -72,7 +73,7 @@ runs:
         case ${{ inputs.target }} in
           android)
             echo 'project-file=${{ inputs.android-project-file }}' >> $GITHUB_OUTPUT
-            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'build-properties=-property:TargetFramework=net7.0-android' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
             ;;
           gtk)
@@ -82,24 +83,34 @@ runs:
             ;;
           ios)
             echo 'project-file=${{ inputs.ios-project-file }}' >> $GITHUB_OUTPUT
-            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'build-properties=-property:TargetFramework=net7.0-ios' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           macos)
             echo 'project-file=${{ inputs.macos-project-file }}' >> $GITHUB_OUTPUT
-            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'build-properties=-property:TargetFramework=net7.0-maccatalyst' >> $GITHUB_OUTPUT
             echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           wasm)
             echo 'project-file=${{ inputs.wasm-project-file }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
-            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
             ;;
-          win)
+          win-x64)
             echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
-            echo 'build-properties=' >> $GITHUB_OUTPUT
-            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
-            ;;              
+            echo 'build-properties=-property:Platform=x64' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            ;;
+          win-x86)
+            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=-property:Platform=x86' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            ;;
+          win-arm64)
+            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=-property:Platform=arm64' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
+            ;;            
           *)
             echo 'project-file=${{ inputs.solution-file }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
