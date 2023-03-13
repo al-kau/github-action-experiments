@@ -22,12 +22,12 @@ jobs:
           result=$(cat << EOF
             {
               "solution":"${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}",
-              "android":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-              "gtk":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
-              "ios":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-              "macos":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-              "wasm":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
-              "windows":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
+              "android":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
+              "gtk":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}",
+              "ios":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
+              "macos":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
+              "wasm":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}",
+              "windows":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}",
             }
           EOF
           )
@@ -46,7 +46,7 @@ jobs:
       projects-map: ${{ needs.configure.outputs.projects-map }}
     steps:
       - run: echo "matrix (${{ matrix.target }}; ${{ matrix.configuration }})"
-      - run: echo "${{ fromJSON(env.projects-map).solution }}|${{ fromJSON(env.projects-map).android }}"
+      - run: echo "projects-map (${{ fromJSON(env.projects-map).solution }}; ${{ fromJSON(env.projects-map).android }})"
       
       - name: Checkout
         uses: actions/checkout@v3
