@@ -15,25 +15,19 @@ jobs:
       root-dirictory: Uno.App
       project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
     outputs:
-      projects-map: ${{ steps.set-projects.outputs.result }}
+      project-map: ${{ steps.init-projects.outputs.project-map }}
     steps:
-      - id: set-projects
-        run: |
-          result=$(cat << EOF
-            {
-              "solution":"${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}",
-              "android":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
-              "gtk":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}",
-              "ios":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
-              "macos":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}",
-              "wasm":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}",
-              "windows":"${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}",
-            }
-          EOF
-          )
-          echo "result<<EOF" >> $GITHUB_OUTPUT
-          echo "$result" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      - id: init-projects
+        uses: ./.github/action/project-map
+        with:
+          solution-file: "${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}"
+          android-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+          gtk-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
+          ios-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+          macos-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+          wasm-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
+          windows-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
+          
   build:
     needs: configure
     runs-on: windows-latest
@@ -47,7 +41,7 @@ jobs:
       dotnet-version: '7.0.x'
       configuration: ${{ matrix.configuration }}
       target: ${{ matrix.target }}
-      projects-map: ${{ needs.configure.outputs.projects-map }}
+      project-map: ${{ needs.configure.outputs.project-map }}
       
     steps:
     - name: Checkout
@@ -73,6 +67,6 @@ jobs:
     - name: Build
       uses: ./.github/actions/build-uno-project
       with:
-        projects-map: ${{ env.projects-map }}
+        projects-map: ${{ env.project-map }}
         configuration: ${{ env.configuration }}
         target: ${{ env.target }}
