@@ -30,11 +30,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
+    env:
+      properties: ${{ fromJSON(needs.job1.outputs.properties) }}
     steps:
       - run: echo "matrix (${{ matrix.project }}; ${{ matrix.config }})"
       - run: echo "properties (${{ needs.job1.outputs.properties }})"
-      - run: |
-          object=${{ fromJSON(needs.job1.outputs.properties) }} 
-          echo "${{object.prop1}}|${{object.prop2}}"
+      - run: echo "${{properties.prop1}}|${{properties.prop2}}"
 
  
