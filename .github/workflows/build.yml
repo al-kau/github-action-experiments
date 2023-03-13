@@ -37,10 +37,12 @@ jobs:
     strategy:
       matrix:
         configuration: [ Debug ]
-        project: [ default ]
+        target: [ default ]
 
     env: 
       dotnet-version: '7.0.x'
+      configuration: ${{ matrix.configuration }}
+      target: ${{ matrix.target }}
       projects-map: ${{ needs.configure.outputs.projects-map }}
       
     steps:
@@ -66,4 +68,4 @@ jobs:
       with:
         projects-map: ${{ env.projects-map }}
         configuration: ${{ env.configuration }}
-        target: 'default'
+        target: ${{ env.target }}
