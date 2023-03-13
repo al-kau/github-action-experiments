@@ -17,6 +17,12 @@ jobs:
     outputs:
       project-map: ${{ steps.init-projects.outputs.project-map }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+    
       - id: init-projects
         uses: ./.github/action/project-map
         with:
