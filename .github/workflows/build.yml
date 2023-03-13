@@ -6,73 +6,62 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-  
+
 jobs:
-  configure:
-    runs-on: ubuntu-latest
-    env:
-      name: Uno.App
-      root-dirictory: Uno.App
-      project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
-    outputs:
-      project-map: ${{ steps.init-projects.outputs.project-map }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: recursive
-    
-      - id: init-projects
-        uses: ./.github/actions/project-map
-        with:
-          solution-file: "${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}"
-          android-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-          gtk-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
-          ios-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-          macos-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
-          wasm-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
-          windows-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
-          
+
   build:
-    needs: configure
     runs-on: windows-latest
-    
+
     strategy:
       matrix:
         configuration: [ Debug, Release ]
         target: [ android, gtk, ios, macos, wasm, win-x64, win-x86, win-arm64 ]
 
-    env: 
-      dotnet-version: '7.0.x'
+    env:
       configuration: ${{ matrix.configuration }}
       target: ${{ matrix.target }}
-      project-map: ${{ needs.configure.outputs.project-map }}
-      
+
+      dotnet-version: '7.0.x'
+
+      name: Uno.App
+      root-dirictory: Uno.App
+      project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: recursive
-    
+
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.dotnet-version }}
-        
+
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
-      
+
     - name: Setup the Uno Platform
       uses: ./.github/actions/setup-uno-platform
       with:
         uno-check-version: '1.5.0'
         uno-manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/main/manifests/uno.ui.manifest.json'
-      
+
+    - id: init-projects
+      uses: ./.github/actions/project-map
+      with:
+        solution-file: "${{ format('{0}/{1}.sln', env.root-dirictory, env.name) }}"
+        android-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+        gtk-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Skia.Gtk') }}"
+        ios-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+        macos-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Mobile') }}"
+        wasm-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Wasm') }}"
+        windows-project-file: "${{ format(env.project-file-template, env.root-dirictory, env.name, 'Windows') }}"
+
     - name: Build
       uses: ./.github/actions/build-uno-project
       with:
-        projects-map: ${{ env.project-map }}
+        project-map: ${{ steps.init-projects.outputs.map }}
         configuration: ${{ env.configuration }}
         target: ${{ env.target }}

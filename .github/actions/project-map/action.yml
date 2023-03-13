@@ -12,7 +12,7 @@ inputs:
     description: Android project file path
     type: string
     required: true
-    
+
   gtk-project-file:
     description: GTK project file path
     type: string
@@ -22,12 +22,12 @@ inputs:
     description: iOS project file path
     type: string
     required: true
-    
+
   macos-project-file:
     description: MacOS project file path
     type: string
     required: true
-    
+
   wasm-project-file:
     description: Wasm project file path
     type: string
@@ -38,11 +38,11 @@ inputs:
     type: string
     required: true
 outputs:
-  project-map:
+  map:
     value: ${{ steps.init-projects.outputs.map }}
 runs:
   using: "composite"
-  
+
   steps:
     - id: init-projects
       shell: bash
