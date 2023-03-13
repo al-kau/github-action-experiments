@@ -2,11 +2,11 @@ name: Build the Uno project
 description: 
 inputs:
   solution-name:
-    description: 'Defines the build configuration'
+    description: 'Solution name'
     required: true
     type: string
   solution-root:
-    description: 'Defines the build configuration'
+    description: 'Defines path to root directory'
     required: true
     type: string
   project-configuration:
@@ -14,14 +14,6 @@ inputs:
     required: false
     type: string
     default: Debug
-  builder-type:
-    description: 'Defines which builder is used to build the project'
-    required: false
-    type: choice
-    default: 'msbuild'
-    options: 
-    - msbuild
-    - dotnet
   target:
     description: 'Defines the build target platform'
     required: false
@@ -36,6 +28,41 @@ inputs:
     - macos
     - wasm
     - win
+  solution-file:
+    description: 'The solution file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.sln'
+  android-project-file:
+    description: 'Android project file to build
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+  ios-project-file:
+    description: 'iOS project file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+  macos-project-file:
+    description: 'MacOS project file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Mobile/${{ inputs.solution-name }}.Mobile.csproj'
+  gtk-project-file:
+    description: 'GTK project file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Skia.Gtk/${{ inputs.solution-name }}.Skia.Gtk.csproj'
+  wasm-project-file:
+    description: 'Wasm project file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Wasm/${{ inputs.solution-name }}.Wasm.csproj'
+  win-project-file:
+    description: 'Windows project file to build'
+      required: false
+      type: string
+      default: '${{ inputs.solution-root }}/${{ inputs.solution-name }}.Windows/${{ inputs.solution-name }}.Windows.csproj'      
 runs:
   using: "composite"
   steps:
@@ -44,26 +71,43 @@ runs:
       run: |
         case ${{ inputs.target }} in
           android)
+            echo 'project-file=${{ inputs.android-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT
             ;;
           gtk)
+            echo 'project-file=${{ inputs.gtk-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           ios)
+            echo 'project-file=${{ inputs.ios-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           macos)
+            echo 'project-file=${{ inputs.macos-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           wasm)
+            echo 'project-file=${{ inputs.wasm-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;
           win)
+            echo 'project-file=${{ inputs.win-project-file }}' >> $GITHUB_OUTPUT
+            echo 'build-properties=' >> $GITHUB_OUTPUT
+            echo 'builder-type=dotnet' >> $GITHUB_OUTPUT          
             ;;              
           *)
-            echo 'project-file=${{ inputs.solution-root }}/${{ inputs.solution-name }}' >> $GITHUB_OUTPUT
+            echo 'project-file=${{ inputs.solution-file }}' >> $GITHUB_OUTPUT
             echo 'build-properties=' >> $GITHUB_OUTPUT
             echo 'builder-type=msbuild' >> $GITHUB_OUTPUT
             ;;
         esac
 
-      
-    - name: Build All
+    - name: Build project
       uses: ./.github/actions/build-project
       with:
         project-file: ${{ steps.build-initializer.outputs.project-file }}
