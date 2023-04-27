@@ -24,7 +24,7 @@ jobs:
       dotnet-version: '7.0.x'
 
       name: Uno.App
-      root-dirictory: Uno.App
+      root-dirictory: src/Uno.App
       project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
 
     steps:
