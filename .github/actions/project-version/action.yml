@@ -1,0 +1,41 @@
+name: Project version
+
+description: Сalculates project version
+
+#inputs:
+#  solution-file:
+#    description: Solution file path
+#    type: string
+#    required: true
+outputs:
+  major:
+    value: ${{ steps.tag-version.outputs.major }}
+  minor:
+    value: ${{ steps.tag-version.outputs.minor }}
+  build:
+    value: ${{ steps.publication-attempt.outputs.build }}         
+  revision:
+    value: ${{ steps.commit.outputs.revision }}   
+  suffix:
+    value: ${{ steps.tag-version.outputs.suffix }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - id: tag-version
+      shell: bash
+      run: |
+        echo "major=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+        echo "minor=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+        echo "suffix=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+
+    - id: commit
+      shell: bash
+      run: |
+        echo "revision=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+
+    - id: publication-attempt
+      shell: bash
+      run: |
+        echo "build=$(echo $RANDOM)" >> $GITHUB_OUTPUT        
