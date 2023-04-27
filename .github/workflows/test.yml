@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       name: Uno.App
-      root-dirictory: Uno.App
+      root-dirictory: src/Uno.App
       project-file-template: '{0}/{1}/{1}.{2}/{1}.{2}.csproj'  # root/name/name.target/name.target.csproj
     outputs:
       projects-map: ${{ steps.set-projects.outputs.result }}
