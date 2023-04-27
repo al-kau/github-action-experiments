@@ -10,11 +10,11 @@ outputs:
   patch:
     value: ${{ steps.tag-version.outputs.patch }}
   build:
-    value: ${{ steps.action-run.outputs.build }}
+    value: ${{ steps.action-context.outputs.build }}
   attempt:
-    value: ${{ steps.action-run.outputs.attempt }}    
+    value: ${{ steps.action-context.outputs.attempt }}    
   today:
-    value: ${{ steps.action-runt.outputs.today }}
+    value: ${{ steps.action-context.outputs.today }}
   revision:
     value: ${{ steps.commit.outputs.revision }}
   suffix:
@@ -51,7 +51,7 @@ runs:
       run: |
         echo "revision=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-    - id: action-run
+    - id: action-context
       shell: bash
       run: |
         echo "today=$(date -u "+%y%m%d")" >> $GITHUB_OUTPUT
@@ -69,8 +69,8 @@ runs:
         major: ${{ steps.tag-version.outputs.major }}
         minor: ${{ steps.tag-version.outputs.minor }}
         patch: ${{ steps.tag-version.outputs.patch }}
-        build: ${{ steps.publication-attempt.outputs.build }}
-        today: ${{ steps.publication-attempt.outputs.today }}
-        attempt: ${{ steps.publication-attempt.outputs.attempt }}
+        build: ${{ steps.action-context.outputs.build }}
+        today: ${{ steps.action-context.outputs.today }}
+        attempt: ${{ steps.action-context.outputs.attempt }}
         revision: ${{ steps.commit.outputs.revision }}
         suffix: ${{ steps.tag-version.outputs.suffix }}
