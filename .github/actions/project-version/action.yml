@@ -35,16 +35,16 @@ runs:
         version=$(git describe --abbrev=0 --match "v[0-9]*")
 
         if [[ $version =~ $regex ]]; then
-          echo "major=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-          echo "minor=${BASH_REMATCH[2]}" >> $GITHUB_OUTPUT
-          echo "patch=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
-          echo "suffix=${BASH_REMATCH[4]}" >> $GITHUB_OUTPUT
-        else
-          echo "major=0" >> $GITHUB_OUTPUT
-          echo "minor=1" >> $GITHUB_OUTPUT
-          echo "patch=0" >> $GITHUB_OUTPUT
-          echo "suffix=''" >> $GITHUB_OUTPUT
+          major=${BASH_REMATCH[1]} >> $GITHUB_OUTPUT
+          minor=${BASH_REMATCH[2]} >> $GITHUB_OUTPUT
+          patch=${BASH_REMATCH[3]} >> $GITHUB_OUTPUT
+          suffix=${BASH_REMATCH[4]} >> $GITHUB_OUTPUT
         fi
+        
+        echo "major=$([[ -z $major ]] && echo 1 || echo $major)" >> $GITHUB_OUTPUT
+        echo "minor=$([[ -z $minor ]] && echo 0 || echo $minor)" >> $GITHUB_OUTPUT
+        echo "patch=$([[ -z $patch ]] && echo 0 || echo $patch)" >> $GITHUB_OUTPUT
+        echo "suffix=$([[ -z $suffix ]] && echo '' || echo $suffix)" >> $GITHUB_OUTPUT
 
     - id: commit
       shell: bash
