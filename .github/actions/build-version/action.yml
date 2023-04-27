@@ -12,7 +12,7 @@ outputs:
   build:
     value: ${{ steps.action-context.outputs.build }}
   attempt:
-    value: ${{ steps.action-context.outputs.attempt }}    
+    value: ${{ steps.action-context.outputs.attempt }}
   today:
     value: ${{ steps.action-context.outputs.today }}
   revision:
@@ -42,9 +42,7 @@ runs:
           patch=${BASH_REMATCH[3]} >> $GITHUB_OUTPUT
           suffix=${BASH_REMATCH[4]} >> $GITHUB_OUTPUT
         fi
-        
-        echo "suffix: $suffix"
-        
+
         echo "major=$([[ -z $major ]] && echo 1 || echo $major)" >> $GITHUB_OUTPUT
         echo "minor=$([[ -z $minor ]] && echo 0 || echo $minor)" >> $GITHUB_OUTPUT
         echo "patch=$([[ -z $patch ]] && echo 0 || echo $patch)" >> $GITHUB_OUTPUT
