@@ -69,7 +69,7 @@ jobs:
 
     - name: Publish ${{ env.project-name }}
       run: |
-        dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" --property:Version=${{ env.version-full }} ${{ env.publish-options }} 
+        dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" --property:Version="${{ env.version-full }}" ${{ env.publish-options }} 
       env:
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
         version-full: "${{ steps.build-version.outputs.version-full }}"
