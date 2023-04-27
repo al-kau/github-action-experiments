@@ -48,10 +48,14 @@ jobs:
     - name: Calculate version
       id: project-version
       uses: ./.github/actions/project-version
-    
+
+    - run: | 
+        echo "Version: ${{ env.version }}"
+      env:
+        version: "${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.build }}.${{ steps.project-version.outputs.revision }}.${{ steps.project-version.outputs.suffix }}"
+
     - name: Publish ${{ env.project-name }}
       run: |
-        echo "Version: ${{ env.version }}"
         dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" ${{ env.publish-options }} # -property:Version=1.2.3-preview2-final
       env:
         version: "${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.build }}.${{ steps.project-version.outputs.revision }}.${{ steps.project-version.outputs.suffix }}"
