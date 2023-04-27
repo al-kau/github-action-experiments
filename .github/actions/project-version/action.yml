@@ -31,18 +31,18 @@ runs:
     - id: tag-version
       shell: bash
       run: |
-        regex="v([0-9]+)\.?([0-9]+)?\W?(.+)?"
+        regex="v([0-9]+)\.?([0-9]+)\.?([0-9]+)?\W?(.+)?"
         version=$(git describe --abbrev=0 --match "v[0-9]*")
-
-        echo "patch=0" >> $GITHUB_OUTPUT
 
         if [[ $version =~ $regex ]]; then
           echo "major=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           echo "minor=${BASH_REMATCH[2]}" >> $GITHUB_OUTPUT
-          echo "suffix=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
+          echo "patch=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
+          echo "suffix=${BASH_REMATCH[4]}" >> $GITHUB_OUTPUT
         else
           echo "major=0" >> $GITHUB_OUTPUT
           echo "minor=1" >> $GITHUB_OUTPUT
+          echo "patch=0" >> $GITHUB_OUTPUT
           echo "suffix=''" >> $GITHUB_OUTPUT
         fi
 
