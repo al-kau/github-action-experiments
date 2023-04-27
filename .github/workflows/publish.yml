@@ -32,7 +32,6 @@ jobs:
 
       # template: root/configuration/framework/runtime
       output-template: '{0}/{1}/{2}/{3}'
-      output1: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
       
     steps:
     - name: Checkout
