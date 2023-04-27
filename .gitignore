@@ -13,3 +13,6 @@ Uno.App/Uno.App/Uno.App.Windows/obj/
 Uno.App/Uno.App/Uno.App.Windows/Uno.App.Windows.csproj.user
 Uno.App/Uno.App/Uno.App/bin/
 Uno.App/Uno.App/Uno.App/obj/
+src/Console.App/.vs/
+src/Console.App/bin/
+src/Console.App/obj/
