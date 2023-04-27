@@ -1,4 +1,4 @@
-# This workflow will build and test the project
+# This workflow will publish the project
 
 name: Publish
 
@@ -19,7 +19,7 @@ jobs:
         #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
         
 
-    runs-on: windows-latest
+    runs-on: linux-latest
 
     env:
       project-name: Console.App
@@ -40,22 +40,18 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
+    - name: Install .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-
-    # Publish
-    # dotnet publish .\Console.App.csproj --output .\publish\win-x64 --configuration Release --framework net7.0 --runtime win-x64 --self-contained -property:PublishSingleFile=true -property:PublishTrimmed=true -property:PublishReadyToRun=true  -property:Version=1.2.3-preview2-final
     
-    - name: Publish "${{ env.project-name }}"
+    - name: Publish ${{ env.project-name }}
       run: |
         dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" ${{ env.publish-options }} # -property:Version=1.2.3-preview2-final
       env:
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
         
-    - name: Archive production artifacts
+    - name: Archive artifacts
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.artifact-name }}
@@ -65,4 +61,3 @@ jobs:
       env:
         artifact-name: "${{ env.project-name }}"
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, '') }}"
-      
