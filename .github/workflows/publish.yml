@@ -1,0 +1,71 @@
+# This workflow will build and test the project
+
+name: Publish
+
+on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
+  workflow_dispatch:
+  
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        runtime: [win-x64, win-x86, linux-x64]
+        #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
+        
+
+    runs-on: ubuntu-latest
+
+    env:
+      project-name: Console.App
+      project-file: src/Console.App/Console.App.csproj
+      output-root: publish
+      configuration: release
+      framework: net7.0
+      runtime: ${{ matrix.runtime }}
+      publish-options: --nologo --self-contained -property:PublishSingleFile=true -property:PublishTrimmed=true -property:PublishReadyToRun=true
+
+      # template: root/configuration/framework/runtime
+      output-template: '{0}/{1}/{2}/{3}'
+      output1: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
+    # Publish
+    # dotnet publish .\Console.App.csproj --output .\publish\win-x64 --configuration Release --framework net7.0 --runtime win-x64 --self-contained -property:PublishSingleFile=true -property:PublishTrimmed=true -property:PublishReadyToRun=true  -property:Version=1.2.3-preview2-final
+    
+    # Publish project
+    - name: Build the solution
+      run: |
+        echo "${{ env.output1 }}"
+        dotnet build "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" ${{ env.publish-options }} # -property:Version=1.2.3-preview2-final
+      env:
+        output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
+        
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.artifact-name }}
+        path: |
+          ${{ env.output }}
+          !${{ env.output }}/**/*.pdb
+      env:
+        artifact-name: "${{ env.project-name }}"
+        output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, '') }}"
+      
