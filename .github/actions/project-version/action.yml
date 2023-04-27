@@ -2,22 +2,27 @@ name: Project version
 
 description: Сalculates project version
 
-#inputs:
-#  solution-file:
-#    description: Solution file path
-#    type: string
-#    required: true
 outputs:
   major:
     value: ${{ steps.tag-version.outputs.major }}
   minor:
     value: ${{ steps.tag-version.outputs.minor }}
+  patch:
+    value: ${{ steps.tag-version.outputs.patch }}
   build:
-    value: ${{ steps.publication-attempt.outputs.build }}         
+    value: ${{ steps.publication-attempt.outputs.build }}
+  today:
+    value: ${{ steps.publication-attempt.outputs.today }}
+  attempt:
+    value: ${{ steps.publication-attempt.outputs.attempt }}
   revision:
-    value: ${{ steps.commit.outputs.revision }}   
+    value: ${{ steps.commit.outputs.revision }}
   suffix:
     value: ${{ steps.tag-version.outputs.suffix }}
+  version-short:
+    value: ${{ steps.format.outputs.short }}
+  version-full:
+    value: ${{ steps.format.outputs.full }}
 
 runs:
   using: "composite"
@@ -26,16 +31,50 @@ runs:
     - id: tag-version
       shell: bash
       run: |
-        echo "major=$(echo $RANDOM)" >> $GITHUB_OUTPUT
-        echo "minor=$(echo $RANDOM)" >> $GITHUB_OUTPUT
-        echo "suffix=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+        regex="v([0-9]+)\.?([0-9]+)?\W?(.+)?"
+        version=$(git describe --abbrev=0 --match "v[0-9]*")
+
+        echo "patch=0" >> $GITHUB_OUTPUT
+
+        if [[ $version =~ $regex ]]; then
+          echo "major=${BASH_REMATCH[1]} minor=${BASH_REMATCH[2]} suffix=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
+        else
+          echo "major=0 minor=1 suffix=''" >> $GITHUB_OUTPUT
+        fi
 
     - id: commit
       shell: bash
       run: |
-        echo "revision=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+        echo "revision=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     - id: publication-attempt
       shell: bash
       run: |
-        echo "build=$(echo $RANDOM)" >> $GITHUB_OUTPUT        
+        today=$(date -u "+%y%m%d")
+        attempt=$(($RANDOM%10000)))
+        build=$(echo ${today}$(printf "%03d" $(($attempt%1000))))
+        echo "today=${today} attempt=${attempt} build=${build}" >> $GITHUB_OUTPUT
+
+    - id: format
+      shell: bash
+      run: |
+        major=$([ -z "${{ env.major }}" ] && echo "0" || echo "${{ env.major }}")
+        minor=$([ -z "${{ env.minor }}" ] && echo "0" || echo "${{ env.minor }}")
+        patch=$([ -z "${{ env.patch }}" ] && echo "0" || echo "${{ env.patch }}")
+        build="${{ env.build }}"
+        today="${{ env.today }}"
+        attempt="${{ env.attempt }}"
+        revision="${{ env.revision }}"
+        suffix=$([ -z "${{ env.suffix }}" ] && echo "" || echo "-${{ env.suffix }}")
+
+        echo "short=$(echo $major.$minor.$patch.$build)" >> $GITHUB_OUTPUT
+        echo "full=$(echo $major.$minor.$patch-$today.$attempt-$revision$suffix)" >> $GITHUB_OUTPUT
+      env:
+        major: ${{ steps.tag-version.outputs.major }}
+        minor: ${{ steps.tag-version.outputs.minor }}
+        patch: ${{ steps.tag-version.outputs.patch }}
+        build: ${{ steps.publication-attempt.outputs.build }}
+        today: ${{ steps.publication-attempt.outputs.today }}
+        attempt: ${{ steps.publication-attempt.outputs.attempt }}
+        revision: ${{ steps.commit.outputs.revision }}
+        suffix: ${{ steps.tag-version.outputs.suffix }}
