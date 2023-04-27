@@ -37,9 +37,13 @@ runs:
         echo "patch=0" >> $GITHUB_OUTPUT
 
         if [[ $version =~ $regex ]]; then
-          echo "major=${BASH_REMATCH[1]} minor=${BASH_REMATCH[2]} suffix=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
+          echo "major=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          echo "minor=${BASH_REMATCH[2]}" >> $GITHUB_OUTPUT
+          echo "suffix=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
         else
-          echo "major=0 minor=1 suffix=''" >> $GITHUB_OUTPUT
+          echo "major=0" >> $GITHUB_OUTPUT
+          echo "minor=1" >> $GITHUB_OUTPUT
+          echo "suffix=''" >> $GITHUB_OUTPUT
         fi
 
     - id: commit
@@ -53,7 +57,9 @@ runs:
         today=$(date -u "+%y%m%d")
         attempt=$(($RANDOM%10000))
         build=$(echo ${today}$(printf "%03d" $(($attempt%1000))))
-        echo "today=${today} attempt=${attempt} build=${build}" >> $GITHUB_OUTPUT
+        echo "today=$today" >> $GITHUB_OUTPUT
+        echo "attempt=$attempt" >> $GITHUB_OUTPUT
+        echo "build=$build" >> $GITHUB_OUTPUT
 
     - id: format
       shell: bash
