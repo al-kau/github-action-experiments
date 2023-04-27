@@ -46,32 +46,33 @@ jobs:
         dotnet-version: 7.0.x
     
     - name: Calculate version
-      id: project-version
-      uses: ./.github/actions/project-version
+      id: build-version
+      uses: ./.github/actions/build-version
 
     - run: | 
         echo "Short version: ${{ env.version-short }}"
         echo "Full version: ${{ env.version-full }}"
 
-        echo "Major: ${{ steps.project-version.outputs.major }}"
-        echo "Minor: ${{ steps.project-version.outputs.minor }}"
-        echo "Patch: ${{ steps.project-version.outputs.patch }}"
-        echo "Build: ${{ steps.project-version.outputs.build }}"
-        echo "Attempt: ${{ steps.project-version.outputs.attempt }}"
-        echo "Today: ${{ steps.project-version.outputs.today }}"
-        echo "Revision: ${{ steps.project-version.outputs.revision }}"
-        echo "Suffix: ${{ steps.project-version.outputs.suffix }}"
-        echo "Version-short: ${{ steps.project-version.outputs.version-short }}"
-        echo "Version-full: ${{ steps.project-version.outputs.version-full }}"
+        echo "Major: ${{ steps.build-version.outputs.major }}"
+        echo "Minor: ${{ steps.build-version.outputs.minor }}"
+        echo "Patch: ${{ steps.build-version.outputs.patch }}"
+        echo "Build: ${{ steps.build-version.outputs.build }}"
+        echo "Attempt: ${{ steps.build-version.outputs.attempt }}"
+        echo "Today: ${{ steps.build-version.outputs.today }}"
+        echo "Revision: ${{ steps.build-version.outputs.revision }}"
+        echo "Suffix: ${{ steps.build-version.outputs.suffix }}"
+        echo "Version-short: ${{ steps.build-version.outputs.version-short }}"
+        echo "Version-full: ${{ steps.build-version.outputs.version-full }}"
       env:
-        version-short: ${{ steps.project-version.outputs.version-short }}
-        version-full: ${{ steps.project-version.outputs.version-full }}
+        version-short: ${{ steps.build-version.outputs.version-short }}
+        version-full: ${{ steps.build-version.outputs.version-full }}
 
     - name: Publish ${{ env.project-name }}
       run: |
-        dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" ${{ env.publish-options }} # -property:Version=1.2.3-preview2-final
+        dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" --property:Version=${{ env.version-full }} ${{ env.publish-options }} 
       env:
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
+        version-full: "${{ steps.build-version.outputs.version-full }}"
         
     - name: Archive artifacts
       uses: actions/upload-artifact@v3
