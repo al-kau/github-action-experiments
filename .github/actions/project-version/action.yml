@@ -51,7 +51,7 @@ runs:
       shell: bash
       run: |
         today=$(date -u "+%y%m%d")
-        attempt=$(($RANDOM%10000)))
+        attempt=$(($RANDOM%10000))
         build=$(echo ${today}$(printf "%03d" $(($attempt%1000))))
         echo "today=${today} attempt=${attempt} build=${build}" >> $GITHUB_OUTPUT
 
