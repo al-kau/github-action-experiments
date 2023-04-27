@@ -1,6 +1,6 @@
-name: Project version
+name: Build version
 
-description: Сalculates project version
+description: Provides version
 
 outputs:
   major:
