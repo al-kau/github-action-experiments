@@ -57,6 +57,7 @@ jobs:
         echo "Minor: ${{ steps.project-version.outputs.minor }}"
         echo "Patch: ${{ steps.project-version.outputs.patch }}"
         echo "Build: ${{ steps.project-version.outputs.build }}"
+        echo "Attempt: ${{ steps.project-version.outputs.attempt }}"
         echo "Today: ${{ steps.project-version.outputs.today }}"
         echo "Revision: ${{ steps.project-version.outputs.revision }}"
         echo "Suffix: ${{ steps.project-version.outputs.suffix }}"
