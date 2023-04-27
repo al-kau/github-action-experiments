@@ -50,9 +50,11 @@ jobs:
       uses: ./.github/actions/project-version
 
     - run: | 
-        echo "Version: ${{ env.version }}"
+        echo "Short version: ${{ env.version-short }}"
+        echo "Full version: ${{ env.version-full }}"
       env:
-        version: "${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.minor }}.${{ steps.project-version.outputs.build }}.${{ steps.project-version.outputs.revision }}.${{ steps.project-version.outputs.suffix }}"
+        version-short: ${{ steps.project-version.outputs.version-short }}
+        version-full: ${{ steps.project-version.outputs.version-full }}
 
     - name: Publish ${{ env.project-name }}
       run: |
