@@ -10,9 +10,11 @@ outputs:
   patch:
     value: ${{ steps.tag-version.outputs.patch }}
   build:
-    value: ${{ steps.publication-attempt.outputs.build }}
+    value: ${{ steps.action-run.outputs.build }}
+  attempt:
+    value: ${{ steps.action-run.outputs.attempt }}    
   today:
-    value: ${{ steps.publication-attempt.outputs.today }}
+    value: ${{ steps.action-runt.outputs.today }}
   revision:
     value: ${{ steps.commit.outputs.revision }}
   suffix:
@@ -49,12 +51,12 @@ runs:
       run: |
         echo "revision=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-    - id: publication-attempt
+    - id: action-run
       shell: bash
       run: |
-        build=$(($RANDOM%10000))
         echo "today=$(date -u "+%y%m%d")" >> $GITHUB_OUTPUT
-        echo "build=$build" >> $GITHUB_OUTPUT
+        echo "build=${{ github.run_number }}" >> $GITHUB_OUTPUT
+        echo "attempt=${{ github.run_attempt }}" >> $GITHUB_OUTPUT
 
     - id: format
       shell: bash
