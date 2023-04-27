@@ -13,8 +13,6 @@ outputs:
     value: ${{ steps.publication-attempt.outputs.build }}
   today:
     value: ${{ steps.publication-attempt.outputs.today }}
-  attempt:
-    value: ${{ steps.publication-attempt.outputs.attempt }}
   revision:
     value: ${{ steps.commit.outputs.revision }}
   suffix:
@@ -54,27 +52,17 @@ runs:
     - id: publication-attempt
       shell: bash
       run: |
-        today=$(date -u "+%y%m%d")
-        attempt=$(($RANDOM%10000))
-        build=$(echo ${today}$(printf "%03d" $(($attempt%1000))))
-        echo "today=$today" >> $GITHUB_OUTPUT
-        echo "attempt=$attempt" >> $GITHUB_OUTPUT
+        build=$(($RANDOM%10000))
+        echo "today=$(date -u "+%y%m%d")" >> $GITHUB_OUTPUT
         echo "build=$build" >> $GITHUB_OUTPUT
 
     - id: format
       shell: bash
       run: |
-        major=$([ -z "${{ env.major }}" ] && echo "0" || echo "${{ env.major }}")
-        minor=$([ -z "${{ env.minor }}" ] && echo "0" || echo "${{ env.minor }}")
-        patch=$([ -z "${{ env.patch }}" ] && echo "0" || echo "${{ env.patch }}")
-        build="${{ env.build }}"
-        today="${{ env.today }}"
-        attempt="${{ env.attempt }}"
-        revision="${{ env.revision }}"
-        suffix=$([ -z "${{ env.suffix }}" ] && echo "" || echo "-${{ env.suffix }}")
+        suffix=$([[ -z ${{ env.suffix }} ]] && echo '' || echo "-${{ env.suffix }}")
 
-        echo "short=$(echo $major.$minor.$patch.$build)" >> $GITHUB_OUTPUT
-        echo "full=$(echo $major.$minor.$patch-$today.$attempt-$revision$suffix)" >> $GITHUB_OUTPUT
+        echo "short=$(echo ${{ env.major }}.${{ env.minor }}.${{ env.patch }}.${{ env.build }})" >> $GITHUB_OUTPUT
+        echo "full=$(echo ${{ env.major }}.${{ env.minor }}.${{ env.patch }}.${{ env.build }}-${{ env.today }}+${{ env.revision }}$suffix)" >> $GITHUB_OUTPUT
       env:
         major: ${{ steps.tag-version.outputs.major }}
         minor: ${{ steps.tag-version.outputs.minor }}
