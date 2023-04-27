@@ -31,7 +31,7 @@ runs:
     - id: tag-version
       shell: bash
       run: |
-        regex="v([0-9]+)\.?([0-9]+)?\.?([0-9]+)?\W?(.+)?"
+        regex="v([0-9]+)\.?([0-9]*)\.?([0-9]*)[^a-zA-Z]?(.*)"
         version=$(git describe --abbrev=0 --match "v[0-9]*")
 
         echo "tag: $version"
@@ -42,6 +42,8 @@ runs:
           patch=${BASH_REMATCH[3]} >> $GITHUB_OUTPUT
           suffix=${BASH_REMATCH[4]} >> $GITHUB_OUTPUT
         fi
+        
+        echo "suffix: $suffix"
         
         echo "major=$([[ -z $major ]] && echo 1 || echo $major)" >> $GITHUB_OUTPUT
         echo "minor=$([[ -z $minor ]] && echo 0 || echo $minor)" >> $GITHUB_OUTPUT
@@ -63,7 +65,8 @@ runs:
     - id: format
       shell: bash
       run: |
-        suffix=$([[ -z ${{ env.suffix }} ]] && echo '' || echo "-${{ env.suffix }}")
+        suffix=${{ env.suffix }}
+        suffix=$([[ -z $suffix ]] && echo '' || echo "-${suffix##*(-)}")
 
         echo "short=$(echo ${{ env.major }}.${{ env.minor }}.${{ env.patch }}.${{ env.build }})" >> $GITHUB_OUTPUT
         echo "full=$(echo ${{ env.major }}.${{ env.minor }}.${{ env.patch }}.${{ env.build }}-${{ env.today }}+${{ env.revision }}$suffix)" >> $GITHUB_OUTPUT
