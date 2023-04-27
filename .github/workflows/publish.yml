@@ -1,0 +1,85 @@
+# This workflow will publish the project
+
+name: Publish
+
+on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
+  workflow_dispatch:
+  
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        runtime: [win-x64, win-x86, linux-x64]
+        #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
+        
+
+    runs-on: ubuntu-latest
+
+    env:
+      project-name: Console.App
+      project-file: src/Console.App/Console.App.csproj
+      output-root: publish
+      configuration: release
+      framework: net7.0
+      runtime: ${{ matrix.runtime }}
+      publish-options: --nologo --self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true
+
+      # template: root/configuration/framework/runtime
+      output-template: '{0}/{1}/{2}/{3}'
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    
+    - name: Calculate version
+      id: project-version
+      uses: ./.github/actions/project-version
+
+    - run: | 
+        echo "Short version: ${{ env.version-short }}"
+        echo "Full version: ${{ env.version-full }}"
+
+        echo "Major: ${{ steps.project-version.outputs.major }}"
+        echo "Minor: ${{ steps.project-version.outputs.minor }}"
+        echo "Patch: ${{ steps.project-version.outputs.patch }}"
+        echo "Build: ${{ steps.project-version.outputs.build }}"
+        echo "Today: ${{ steps.project-version.outputs.today }}"
+        echo "Attempt: ${{ steps.project-version.outputs.attempt }}"
+        echo "Revision: ${{ steps.project-version.outputs.revision }}"
+        echo "Suffix: ${{ steps.project-version.outputs.suffix }}"
+        echo "Version-short: ${{ steps.project-version.outputs.version-short }}"
+        echo "Version-full: ${{ steps.project-version.outputs.version-full }}"
+      env:
+        version-short: ${{ steps.project-version.outputs.version-short }}
+        version-full: ${{ steps.project-version.outputs.version-full }}
+
+    - name: Publish ${{ env.project-name }}
+      run: |
+        dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" ${{ env.publish-options }} # -property:Version=1.2.3-preview2-final
+      env:
+        output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
+        
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.artifact-name }}
+        path: |
+          ${{ env.output }}
+          !${{ env.output }}**/*.pdb
+      env:
+        artifact-name: "${{ env.project-name }}"
+        output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, '') }}"
