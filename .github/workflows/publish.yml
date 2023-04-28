@@ -44,15 +44,19 @@ jobs:
     - id: set-config
       shell: bash
       run: |
-        config=$(cat << ./publish/config.json)
+        config=$(cat ./publish/config.json)
         
         os=${{ github.event.inputs.target-os }}
         runtime=${{ github.event.inputs.target-runtime }}
         
         os=$([[ $os == "all" ]] && echo '' || echo $os)
         runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
+        runtime=$([[ $runtime == "linux" ]] && echo "ubuntu" || echo $runtime)
         
         filter=$(echo $config | jq --arg os "$os" --arg runtime "$runtime" '.[] | select( (.os | contains($os)) and (.runtime | contains($runtime)) )' )
+        
+        echo $filter
+        
         echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
   publish:
