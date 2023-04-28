@@ -55,7 +55,6 @@ jobs:
         filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
 
         echo "matrix: $filter"
-        
         echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
   publish:
@@ -93,10 +92,10 @@ jobs:
       id: build-version
       uses: ./.github/actions/build-version
 
-    - run: | 
-        echo "Short version: ${{ env.version-short }}"
-        echo "Full version: ${{ env.version-full }}"
-
+    - name: New version
+      run: | 
+        echo "Short version: ${{ steps.build-version.outputs.version-short }}"
+        echo "Full version: ${{ steps.build-version.outputs.version-full }}"
         echo "Major: ${{ steps.build-version.outputs.major }}"
         echo "Minor: ${{ steps.build-version.outputs.minor }}"
         echo "Patch: ${{ steps.build-version.outputs.patch }}"
@@ -105,11 +104,6 @@ jobs:
         echo "Today: ${{ steps.build-version.outputs.today }}"
         echo "Revision: ${{ steps.build-version.outputs.revision }}"
         echo "Suffix: ${{ steps.build-version.outputs.suffix }}"
-        echo "Version-short: ${{ steps.build-version.outputs.version-short }}"
-        echo "Version-full: ${{ steps.build-version.outputs.version-full }}"
-      env:
-        version-short: ${{ steps.build-version.outputs.version-short }}
-        version-full: ${{ steps.build-version.outputs.version-full }}
 
     - name: Publish ${{ env.project-name }}
       run: |
