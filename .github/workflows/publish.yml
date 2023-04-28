@@ -61,7 +61,6 @@ jobs:
         else
           echo "status='failure'" >> $GITHUB_OUTPUT
           echo "no suitable configuration found for the selected options"
-          filter='[{"os":"ubuntu-latest"}]'
         fi
 
         echo "matrix: $filter"
