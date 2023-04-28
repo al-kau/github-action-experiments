@@ -32,7 +32,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     
-    if: needs.prepare.outputs.status == 'success'  
+    if: needs.prepare.outputs.status == `success`  
     steps:
     - run: echo ${{ needs.prepare.outputs.status }}
     
