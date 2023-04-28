@@ -68,8 +68,8 @@ jobs:
     
   publish:
     needs: prepare-publish
-    if: needs.prepare-publish.outputs.status == 'success'
-    runs-on: ${{ matrix.os }}
+    
+    runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.prepare-publish.outputs.matrix)}}
 
@@ -86,6 +86,7 @@ jobs:
       output-template: '{0}/{1}/{2}/{3}'
       
     steps:
+    - run: echo ${{ needs.prepare-publish.outputs.status }}
     - name: Checkout
       uses: actions/checkout@v3
       with:
