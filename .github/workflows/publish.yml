@@ -49,8 +49,8 @@ jobs:
         runtime=${{ github.event.inputs.target-runtime }}
 
         os=$([[ $os == "all" ]] && echo '' || echo $os)
+        os=$([[ $os == "linux" ]] && echo "ubuntu" || echo $os)
         runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
-        runtime=$([[ $runtime == "linux" ]] && echo "ubuntu" || echo $runtime)
 
         filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
 
