@@ -55,13 +55,12 @@ jobs:
 
         filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
         len=$( echo $filter | jq '. | length' )
-        
+
         if(( $len > 0 )); then
-          echo "status='success'" >> $GITHUB_OUTPUT
+          echo "status=success" >> $GITHUB_OUTPUT
         else
-          echo "status='failure'" >> $GITHUB_OUTPUT
+          echo "status=failure" >> $GITHUB_OUTPUT
           echo "no suitable configuration found for the selected options"
-          filter='[{"os":"ubuntu-latest"}]'
         fi
 
         echo "matrix: $filter"
@@ -69,7 +68,7 @@ jobs:
     
   publish:
     needs: prepare
-    if: needs.prepare.outputs.status == success
+    if: needs.prepare.outputs.status == 'success'
     
     runs-on: ${{ matrix.os }}
     strategy:
