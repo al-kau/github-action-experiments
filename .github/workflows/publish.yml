@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      config: ${{ steps.set-config.outputs.matrix }}
+      matrix: ${{ steps.set-up-matrix.outputs.matrix }}
 
     steps:
     - name: Checkout
@@ -41,7 +41,8 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - id: set-config
+    - name: Prepare a strategy matrix
+      id: set-up-matrix
       shell: bash
       run: |
         os=${{ github.event.inputs.target-os }}
@@ -53,7 +54,7 @@ jobs:
 
         filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
 
-        echo $filter
+        echo "matrix: $filter"
         
         echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
@@ -62,7 +63,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix: ${{fromJson(needs.prepare-publish.outputs.config)}}
+      matrix: ${{fromJson(needs.prepare-publish.outputs.matrix)}}
 
     env:
       project-name: Console.App
