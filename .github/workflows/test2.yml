@@ -1,0 +1,42 @@
+# This workflow will publish the project
+
+name: Test2
+
+on:
+  workflow_dispatch:
+    inputs:
+      condition:
+        type: choice
+        default: ok
+        options: 
+        - ok
+        - cancel
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+
+    outputs:
+      status: ${{ steps.set-up.outputs.status }}
+
+    steps:
+    - name: Prepare a strategy matrix
+      id: set-up
+      shell: bash
+      run: |
+        if [[${{github.event.inputs.condition}} == 'ok']]; then
+          echo "status='success'" >> $GITHUB_OUTPUT
+        else
+          echo "status='failure'" >> $GITHUB_OUTPUT
+          echo "fail"
+        fi
+    
+  publish:
+    needs: prepare
+    if: needs.prepare.outputs.status == 'success'
+    
+    runs-on: linux-ubuntu
+      
+    steps:
+    - run: echo ${{ needs.prepare.outputs.status }}
+    
