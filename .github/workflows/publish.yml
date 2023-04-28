@@ -61,6 +61,7 @@ jobs:
         else
           echo "status='failure'" >> $GITHUB_OUTPUT
           echo "no suitable configuration found for the selected options"
+          filter='[{"os":"ubuntu-latest"}]'
         fi
 
         echo "matrix: $filter"
@@ -70,7 +71,7 @@ jobs:
     needs: prepare-publish
     if: ${{needs.prepare-publish.outputs.status}} == 'success'
     
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix: ${{fromJson(needs.prepare-publish.outputs.matrix)}}
 
