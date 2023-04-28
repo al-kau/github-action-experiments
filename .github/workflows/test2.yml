@@ -21,7 +21,7 @@ jobs:
       shell: bash
       run: |
         con="${{github.event.inputs.condition}}"
-        if [["$con" == "ok"]]; then
+        if [[ "$con" == "ok" ]]; then
           echo "status='success'" >> $GITHUB_OUTPUT
         else
           echo "status='failure'" >> $GITHUB_OUTPUT
