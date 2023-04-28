@@ -30,7 +30,7 @@ jobs:
     
   publish:
     needs: prepare
-    runs-on: linux-ubuntu
+    runs-on: ubuntu-latest
     
     if: needs.prepare.outputs.status == 'success'  
     steps:
