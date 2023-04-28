@@ -20,7 +20,7 @@ jobs:
       id: set-up
       shell: bash
       run: |
-        con="{{github.event.inputs.condition}}"
+        con="${{github.event.inputs.condition}}"
         if [["$con" == "ok"]]; then
           echo "status='success'" >> $GITHUB_OUTPUT
         else
