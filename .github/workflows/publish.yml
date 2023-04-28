@@ -69,7 +69,7 @@ jobs:
     
   publish:
     needs: prepare
-    if: needs.prepare.outputs.status == 'success'
+    if: needs.prepare.outputs.status == success
     
     runs-on: ${{ matrix.os }}
     strategy:
