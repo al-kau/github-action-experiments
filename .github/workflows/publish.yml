@@ -8,17 +8,59 @@ on:
 #  pull_request:
 #    branches: [ "main" ]
   workflow_dispatch:
-  
+    inputs:
+      target-os:
+        type: choice
+        default: all
+        options: 
+        - windows
+        - linux
+        - macos
+        - all
+
+      target-runtime:
+        type: choice
+        default: all
+        options: 
+        - x86
+        - x64
+        - arm
+        - arm64
+        - all
 jobs:
-  publish:
-    strategy:
-      matrix:
-        #os: [windows-latest, ubuntu-latest, macos-latest]
-        include: [ {os: windows-latest, runtime: win-x64}, {os: ubuntu-latest, runtime: linux-x64}, {os: macos-latest, runtime: osx-x64} ]
-        #runtime: [win-x64, win-x86, linux-x64]
-        #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
+  prepare-publish:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      config: ${{ steps.set-config.outputs.matrix }}
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+    
+    - id: set-config
+      shell: bash
+      run: |
+        config=$(cat << ./publish/config.json)
         
+        os=${{ github.event.inputs.target-os }}
+        runtime=${{ github.event.inputs.target-runtime }}
+        
+        os=$([[ $os == "all" ]] && echo '' || echo $os)
+        runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
+        
+        filter=$(echo $config | jq --arg os "$os" --arg runtime "$runtime" '.[] | select( (.os | contains($os)) and (.runtime | contains($runtime)) )' )
+        echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
+    
+  publish:
+    needs: prepare-publish
+
     runs-on: ${{ matrix.os }}
+    strategy:
+      matrix: ${{fromJson(needs.prepare-publish.outputs.config)}}
 
     env:
       project-name: Console.App
