@@ -30,31 +30,29 @@ on:
 jobs:
   prepare-publish:
     runs-on: ubuntu-latest
-    
+
     outputs:
       config: ${{ steps.set-config.outputs.matrix }}
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: recursive
-    
+
     - id: set-config
       shell: bash
       run: |
-        config=$(cat ./publish/config.json)
-        
         os=${{ github.event.inputs.target-os }}
         runtime=${{ github.event.inputs.target-runtime }}
-        
+
         os=$([[ $os == "all" ]] && echo '' || echo $os)
         runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
         runtime=$([[ $runtime == "linux" ]] && echo "ubuntu" || echo $runtime)
-        
-        filter=$(echo $config | jq --arg os "$os" --arg runtime "$runtime" '.[] | select( (.os | contains($os)) and (.runtime | contains($runtime)) )' )
-        
+
+        filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
+
         echo $filter
         
         echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
@@ -118,7 +116,7 @@ jobs:
       env:
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
         version-full: "${{ steps.build-version.outputs.version-full }}"
-        
+
     - name: Archive artifacts
       uses: actions/upload-artifact@v3
       with:
