@@ -18,7 +18,7 @@ jobs:
         #runtime: [win-x64, win-x86, linux-x64]
         #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
         
-    runs-on: os
+    runs-on: ${{ matrix.os }}
 
     env:
       project-name: Console.App
