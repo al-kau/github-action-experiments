@@ -87,7 +87,6 @@ jobs:
       output-template: '{0}/{1}/{2}/{3}'
       
     steps:
-    - run: echo ${{ needs.prepare-publish.outputs.status }}
     - name: Checkout
       uses: actions/checkout@v3
       with:
