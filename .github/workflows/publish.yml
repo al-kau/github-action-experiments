@@ -68,6 +68,7 @@ jobs:
     
   publish:
     needs: prepare-publish
+    if: needs.prepare-publish.outputs.status == 'success'
     
     runs-on: ubuntu-latest
     strategy:
