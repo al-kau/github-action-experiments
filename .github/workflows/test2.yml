@@ -30,10 +30,9 @@ jobs:
     
   publish:
     needs: prepare
-    if: needs.prepare.outputs.status == 'success'
-    
     runs-on: linux-ubuntu
-      
+    
+    if: needs.prepare.outputs.status == 'success'  
     steps:
     - run: echo ${{ needs.prepare.outputs.status }}
     
