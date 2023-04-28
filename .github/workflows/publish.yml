@@ -10,16 +10,15 @@ on:
   workflow_dispatch:
   
 jobs:
-
-  build:
-
+  publish:
     strategy:
       matrix:
-        runtime: [win-x64, win-x86, linux-x64]
+        #os: [windows-latest, ubuntu-latest, macos-latest]
+        include: [ {os: windows-latest, runtime: win-x64}, {os: ubuntu-latest, runtime: linux-x64}, {os: macos-latest, runtime: osx-x64} ]
+        #runtime: [win-x64, win-x86, linux-x64]
         #runtime: [win-x64, win-x86, win-arm, win-arm64, osx-x64, osx-arm64, linux-x64, linux-arm, linux-arm64]
         
-
-    runs-on: windows-latest
+    runs-on: os
 
     env:
       project-name: Console.App
