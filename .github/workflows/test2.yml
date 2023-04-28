@@ -22,17 +22,18 @@ jobs:
       run: |
         con="${{github.event.inputs.condition}}"
         if [[ "$con" == "ok" ]]; then
-          echo "status='success'" >> $GITHUB_OUTPUT
+          echo "status=true" >> $GITHUB_OUTPUT
         else
-          echo "status='failure'" >> $GITHUB_OUTPUT
+          echo "status=false" >> $GITHUB_OUTPUT
           echo "fail"
         fi
     
   publish:
     needs: prepare
+    if: needs.prepare.outputs.status == 'true'
     runs-on: ubuntu-latest
-    
-    if: needs.prepare.outputs.status == `success`  
+  
+     
     steps:
     - run: echo ${{ needs.prepare.outputs.status }}
     
