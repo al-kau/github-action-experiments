@@ -28,7 +28,7 @@ on:
         - arm64
         - all
 jobs:
-  prepare-publish:
+  prepare:
     runs-on: ubuntu-latest
 
     outputs:
@@ -68,12 +68,12 @@ jobs:
         echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
   publish:
-    needs: prepare-publish
-    if: ${{needs.prepare-publish.outputs.status}} == 'success'
+    needs: prepare
+    if: ${{needs.prepare.outputs.status == 'success'}}
     
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix: ${{fromJson(needs.prepare-publish.outputs.matrix)}}
+      matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
 
     env:
       project-name: Console.App
