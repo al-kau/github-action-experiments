@@ -25,6 +25,7 @@ runs:
       shell: bash
       run: |
         config=${{ inputs.config-file }}
+        tags="${{ input.tags }}"
 
         echo "project-file=$(jq -r ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
         echo "output-name=$(jq -r ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
