@@ -11,6 +11,7 @@ on:
     inputs:
       config-file:
         type: string
+        default: "./publish/config.json"
 
       target-os:
         type: choice
