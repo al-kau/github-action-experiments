@@ -1,6 +1,6 @@
 name: Publish configuration parser.
 
-description: It parses json configuration file which contains publish profiles.
+description: It parses json configuration file which contains publish profiles. It can also select profiles by tags.
 
 inputs:
   config-file:
