@@ -5,7 +5,7 @@ description:
 inputs:
   config-file:
     type: string
-  filter:
+  tags:
     type: string
 
 outputs:
@@ -28,8 +28,7 @@ runs:
         echo "project-file=$(jq -r ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
         echo "output-name=$(jq -r ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
 
-        profiles=$(jq -r '[ .profiles[] | {os, runtime, configuration, framework, options} ]' $config)
-
+        profiles=$(jq -r --arg tags "$tags" '($tags / ",") as $tags | [ .profiles[] | (.tags) as $profile_tags | select(all($tags[]; IN($profile_tags[]))) | {os,runtime,configuration,framework,options} ]' $config)
 
         echo "profiles: $profiles"
         echo "profiles={\"include\":$(echo $profiles)}" >> $GITHUB_OUTPUT
