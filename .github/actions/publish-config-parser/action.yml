@@ -1,0 +1,35 @@
+name: Publish configuration parse
+
+description: 
+
+inputs:
+  config-file:
+    type: string
+  filter:
+    type: string
+
+outputs:
+  project-file:
+    value: ${{ steps.parse.outputs.project-file }}
+  output-name:
+    value: ${{ steps.parse.outputs.output-name }}
+  profiles:
+    value: ${{ steps.parse.outputs.profiles }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - id: parse
+      shell: bash
+      run: |
+        config=${{ inputs.config-file }}
+
+        echo "project-file=$(jq ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
+        echo "output-name=$(jq ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
+
+        profiles=$(jq '[ .profiles[] | {os, runtime, configuration, framework, options} ' $config)
+
+
+        echo "profiles: $profiles"
+        echo "profiles={\"include\":$(echo $profiles)}" >> $GITHUB_OUTPUT
