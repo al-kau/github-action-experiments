@@ -5,7 +5,7 @@
   "profiles" :
   [
     {
-      "filters": ["windows", "x86", "all"],
+      "tags": ["windows", "x86", "all"],
       "os": "windows-latest",
       "runtime": "win-x86",
       "configuration": "release",
@@ -14,7 +14,7 @@
     },
 
     {
-      "filters": ["windows", "x64", "all"],
+      "tags": ["windows", "x64", "all"],
       "os": "windows-latest",
       "runtime": "win-x64",
       "configuration": "release",
@@ -23,7 +23,7 @@
     },
 
     {
-      "filters": ["windows", "arm", "all"],
+      "tags": ["windows", "arm", "all"],
       "os": "windows-latest",
       "runtime": "win-arm",
       "configuration": "release",
@@ -32,7 +32,7 @@
     },
 
     {
-      "filters": ["windows", "arm64", "all"],
+      "tags": ["windows", "arm64", "all"],
       "os": "windows-latest",
       "runtime": "win-arm64",
       "configuration": "release",
@@ -41,7 +41,7 @@
     },
 
     {
-      "filters": ["linux", "x64", "all"],
+      "tags": ["linux", "x64", "all"],
       "os": "ubuntu-latest",
       "runtime": "linux-x64",
       "configuration": "release",
@@ -50,7 +50,7 @@
     },
 
     {
-      "filters": ["linux", "arm", "all"],
+      "tags": ["linux", "arm", "all"],
       "os": "ubuntu-latest",
       "runtime": "linux-arm",
       "configuration": "release",
@@ -59,7 +59,7 @@
     },
 
     {
-      "filters": ["linux", "arm64", "all"],
+      "tags": ["linux", "arm64", "all"],
       "os": "ubuntu-latest",
       "runtime": "linux-arm64",
       "configuration": "release",
@@ -68,7 +68,7 @@
     },
 
     {
-      "filters": ["osx", "x64", "all"],
+      "tags": ["osx", "x64", "all"],
       "os": "macos-latest",
       "runtime": "osx-x64",
       "configuration": "release",
@@ -77,7 +77,7 @@
     },
 
     {
-      "filters": ["osx", "arm64", "all"],
+      "tags": ["osx", "arm64", "all"],
       "os": "macos-latest",
       "runtime": "osx-arm64",
       "configuration": "release",
