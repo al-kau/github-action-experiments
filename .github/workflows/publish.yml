@@ -3,10 +3,6 @@
 name: Publish
 
 on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       config-file:
@@ -58,10 +54,6 @@ jobs:
     - name: Check
       id: check
       run: |
-      
-        echo 'project file: ${{ steps.publish-config-parser.outputs.project-file }}'
-        echo 'output name: ${{ steps.publish-config-parser.outputs.output-name }}'
-        
         profiles='${{ steps.publish-config-parser.outputs.profiles }}'
         length=$( echo $profiles | jq '.include | length' )
 
@@ -71,27 +63,6 @@ jobs:
            echo "status=failure" >> $GITHUB_OUTPUT
            echo "no suitable configuration found"
          fi
-
-      # run: |
-      #   os=${{ github.event.inputs.target-os }}
-      #   runtime=${{ github.event.inputs.target-runtime }}
-
-      #   os=$([[ $os == "all" ]] && echo '' || echo $os)
-      #   os=$([[ $os == "linux" ]] && echo "ubuntu" || echo $os)
-      #   runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
-
-      #   filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
-      #   len=$( echo $filter | jq '. | length' )
-
-      #   if(( $len > 0 )); then
-      #     echo "status=success" >> $GITHUB_OUTPUT
-      #   else
-      #     echo "status=failure" >> $GITHUB_OUTPUT
-      #     echo "no suitable configuration found for the selected options"
-      #   fi
-
-      #   echo "matrix: $filter"
-      #   echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
   publish:
     needs: prepare
@@ -104,11 +75,11 @@ jobs:
     env:
       output-name: ${{ needs.prepare.outputs.output-name }}
       project-file: ${{ needs.prepare.outputs.project-file }}
-      output-root: publish/output
       configuration: ${{ matrix.configuration }}
       framework: ${{ matrix.framework }}
       runtime: ${{ matrix.runtime }}
       publish-options: ${{ matrix.options }}
+      output-root: publish/output
 
       # template: root/configuration/framework/runtime
       output-template: '{0}/{1}/{2}/{3}'
