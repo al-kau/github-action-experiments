@@ -29,11 +29,12 @@ on:
         - all
 jobs:
   prepare:
+    name: Prepare
     runs-on: ubuntu-latest
 
     outputs:
       matrix: ${{ steps.publish-config-parser.outputs.profiles }}
-      status: ${{ steps.check.outputs.status }}
+      status: ${{ steps.checker.outputs.status }}
       project-file: ${{ steps.publish-config-parser.outputs.project-file }}
       output-name: ${{ steps.publish-config-parser.outputs.output-name }}
 
@@ -44,15 +45,15 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - name: Parse config
+    - name: Parse configuration
       id: publish-config-parser
       uses: ./.github/actions/publish-config-parser
       with:
         config-file: ${{ github.event.inputs.config-file }}
         tags: "${{ github.event.inputs.target-os }},${{ github.event.inputs.target-runtime }}"
 
-    - name: Check
-      id: check
+    - name: Check profiles
+      id: checker
       run: |
         profiles='${{ steps.publish-config-parser.outputs.profiles }}'
         length=$( echo $profiles | jq '.include | length' )
@@ -61,10 +62,11 @@ jobs:
            echo "status=success" >> $GITHUB_OUTPUT
          else
            echo "status=failure" >> $GITHUB_OUTPUT
-           echo "no suitable configuration found"
+           echo "No suitable publish profile found"
          fi
     
   publish:
+    name: Publish
     needs: prepare
     if: needs.prepare.outputs.status == 'success'
     
