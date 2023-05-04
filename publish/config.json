@@ -1,13 +1,88 @@
-[
-  { "os": "windows-latest", "runtime" : "win-x86" },
-  { "os": "windows-latest", "runtime" : "win-x64" },
-  { "os": "windows-latest", "runtime" : "win-arm" },
-  { "os": "windows-latest", "runtime" : "win-arm64" },
+{
+  "project-file": "src/Console.App/Console.App.csproj",
+  "output-name": "Console.App",
 
-  { "os": "ubuntu-latest", "runtime" : "linux-x64" },
-  { "os": "ubuntu-latest", "runtime" : "linux-arm" },
-  { "os": "ubuntu-latest", "runtime" : "linux-arm64" },
+  "profiles" :
+  [
+    {
+      "filters": ["windows", "x86", "all"],
+      "os": "windows-latest",
+      "runtime": "win-x86",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
 
-  { "os": "macos-latest", "runtime" : "osx-x64" },
-  { "os": "macos-latest", "runtime" : "osx-arm64" }
-]
+    {
+      "filters": ["windows", "x64", "all"],
+      "os": "windows-latest",
+      "runtime": "win-x64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["windows", "arm", "all"],
+      "os": "windows-latest",
+      "runtime": "win-arm",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["windows", "arm64", "all"],
+      "os": "windows-latest",
+      "runtime": "win-arm64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["linux", "x64", "all"],
+      "os": "ubuntu-latest",
+      "runtime": "linux-x64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["linux", "arm", "all"],
+      "os": "ubuntu-latest",
+      "runtime": "linux-arm",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["linux", "arm64", "all"],
+      "os": "ubuntu-latest",
+      "runtime": "linux-arm64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"
+    },
+
+    {
+      "filters": ["osx", "x64", "all"],
+      "os": "macos-latest",
+      "runtime": "osx-x64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"      
+    },
+
+    {
+      "filters": ["osx", "arm64", "all"],
+      "os": "macos-latest",
+      "runtime": "osx-arm64",
+      "configuration": "release",
+      "framework": "net7.0",
+      "options" : "--self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true"      
+    }
+  ]
+}

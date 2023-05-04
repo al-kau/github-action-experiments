@@ -9,6 +9,9 @@ on:
 #    branches: [ "main" ]
   workflow_dispatch:
     inputs:
+      config-file:
+        type: string
+
       target-os:
         type: choice
         default: all
@@ -32,8 +35,10 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      matrix: ${{ steps.set-up-matrix.outputs.matrix }}
-      status: ${{ steps.set-up-matrix.outputs.status }}
+      matrix: ${{ steps.publish-config-parser.outputs.profiles }}
+      status: ${{ steps.check.outputs.status }}
+      project-file: ${{ steps.publish-config-parser.outputs.project-file }}
+      output-name: ${{ steps.publish-config-parser.outputs.output-name }}
 
     steps:
     - name: Checkout
@@ -42,29 +47,46 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - name: Prepare a strategy matrix
-      id: set-up-matrix
-      shell: bash
+    - name: Parse config
+      id: publish-config-parser
+      uses: ./.github/actions/publish-config-parser
+      with:
+        config-file: ${{ github.event.inputs.config-file }}
+        filter: ""
+
+    - name: Check
+      id: check
       run: |
-        os=${{ github.event.inputs.target-os }}
-        runtime=${{ github.event.inputs.target-runtime }}
+        profiles=${{ steps.publish-config-parser.outputs.profiles }}
+        length=$( echo $profiles | jq '. | length' )
 
-        os=$([[ $os == "all" ]] && echo '' || echo $os)
-        os=$([[ $os == "linux" ]] && echo "ubuntu" || echo $os)
-        runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
+        if(( $length > 0 )); then
+           echo "status=success" >> $GITHUB_OUTPUT
+         else
+           echo "status=failure" >> $GITHUB_OUTPUT
+           echo "no suitable configuration found"
+         fi
 
-        filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
-        len=$( echo $filter | jq '. | length' )
+      # run: |
+      #   os=${{ github.event.inputs.target-os }}
+      #   runtime=${{ github.event.inputs.target-runtime }}
 
-        if(( $len > 0 )); then
-          echo "status=success" >> $GITHUB_OUTPUT
-        else
-          echo "status=failure" >> $GITHUB_OUTPUT
-          echo "no suitable configuration found for the selected options"
-        fi
+      #   os=$([[ $os == "all" ]] && echo '' || echo $os)
+      #   os=$([[ $os == "linux" ]] && echo "ubuntu" || echo $os)
+      #   runtime=$([[ $runtime == "all" ]] && echo '' || echo $runtime)
 
-        echo "matrix: $filter"
-        echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
+      #   filter=$(jq --arg os "$os" --arg runtime "$runtime" 'map( . | select( (.os | contains($os)) and (.runtime | contains($runtime)) ) )' ./publish/config.json)
+      #   len=$( echo $filter | jq '. | length' )
+
+      #   if(( $len > 0 )); then
+      #     echo "status=success" >> $GITHUB_OUTPUT
+      #   else
+      #     echo "status=failure" >> $GITHUB_OUTPUT
+      #     echo "no suitable configuration found for the selected options"
+      #   fi
+
+      #   echo "matrix: $filter"
+      #   echo "matrix={\"include\":$(echo $filter)}" >> $GITHUB_OUTPUT
     
   publish:
     needs: prepare
@@ -75,13 +97,13 @@ jobs:
       matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
 
     env:
-      project-name: Console.App
-      project-file: src/Console.App/Console.App.csproj
-      output-root: publish
-      configuration: release
-      framework: net7.0
+      output-name: ${{ needs.prepare.outputs.output-name }}
+      project-file: ${{ needs.prepare.outputs.project-file }}
+      output-root: publish/output
+      configuration: ${{ matrix.configuration }}
+      framework: ${{ matrix.framework }}
       runtime: ${{ matrix.runtime }}
-      publish-options: --nologo --self-contained --property:PublishSingleFile=true --property:PublishTrimmed=true --property:PublishReadyToRun=true
+      publish-options: ${{ matrix.options }}
 
       # template: root/configuration/framework/runtime
       output-template: '{0}/{1}/{2}/{3}'
@@ -99,36 +121,38 @@ jobs:
         dotnet-version: 7.0.x
     
     - name: Calculate version
-      id: build-version
-      uses: ./.github/actions/build-version
+      id: number-version-information
+      uses: ./.github/actions/number-version-information
 
     - name: New version
       run: | 
-        echo "Short version: ${{ steps.build-version.outputs.version-short }}"
-        echo "Full version: ${{ steps.build-version.outputs.version-full }}"
-        echo "Major: ${{ steps.build-version.outputs.major }}"
-        echo "Minor: ${{ steps.build-version.outputs.minor }}"
-        echo "Patch: ${{ steps.build-version.outputs.patch }}"
-        echo "Build: ${{ steps.build-version.outputs.build }}"
-        echo "Attempt: ${{ steps.build-version.outputs.attempt }}"
-        echo "Today: ${{ steps.build-version.outputs.today }}"
-        echo "Revision: ${{ steps.build-version.outputs.revision }}"
-        echo "Suffix: ${{ steps.build-version.outputs.suffix }}"
+        echo "Short version: ${{ steps.number-version-information.outputs.version-short }}"
+        echo "Full version: ${{ steps.number-version-information.outputs.version-full }}"
+        echo "Major: ${{ steps.number-version-information.outputs.major }}"
+        echo "Minor: ${{ steps.number-version-information.outputs.minor }}"
+        echo "Patch: ${{ steps.number-version-information.outputs.patch }}"
+        echo "Build: ${{ steps.number-version-information.outputs.build }}"
+        echo "Attempt: ${{ steps.number-version-information.outputs.attempt }}"
+        echo "Today: ${{ steps.number-version-information.outputs.today }}"
+        echo "Revision: ${{ steps.number-version-information.outputs.revision }}"
+        echo "Suffix: ${{ steps.number-version-information.outputs.suffix }}"
 
-    - name: Publish ${{ env.project-name }}
+    - name: Publish ${{ env.output-name }} [${{ env.version-short }}]
       run: |
         dotnet publish "${{ env.project-file }}" --output "${{ env.output }}" --configuration "${{ env.configuration }}" --framework "${{ env.framework }}" --runtime "${{ env.runtime }}" --property:Version="${{ env.version-full }}" ${{ env.publish-options }} 
       env:
         output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, env.runtime) }}"
-        version-full: "${{ steps.build-version.outputs.version-full }}"
+        version-full: "${{ steps.number-version-information.outputs.version-full }}"
+        version-short: "${{ steps.number-version-information.outputs.version-short }}"
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.artifact-name }}
+        name: "${{ env.output-name }} [${{ env.version-short }}]"
         path: |
           ${{ env.output }}
           !${{ env.output }}**/*.pdb
       env:
-        artifact-name: "${{ env.project-name }}"
-        output: "${{ format(env.output-template, env.output-root, env.configuration, env.framework, '') }}"
+        artifact-name: "${{ env.output-name }}"
+        version-short: "${{ steps.number-version-information.outputs.version-short }}"
+        output: "${{ env.output-root }}"

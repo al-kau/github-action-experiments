@@ -1,6 +1,6 @@
-name: Build version
+name: Number version information
 
-description: Provides version
+description: Provides number version
 
 outputs:
   major:
