@@ -59,8 +59,8 @@ jobs:
       id: check
       run: |
       
-        echo "project file: ${{ steps.publish-config-parser.outputs.project-file }}"
-        echo "output name: ${{ steps.publish-config-parser.outputs.output-name }}"
+        echo 'project file: ${{ steps.publish-config-parser.outputs.project-file }}'
+        echo 'output name: ${{ steps.publish-config-parser.outputs.output-name }}'
         
         profiles='${{ steps.publish-config-parser.outputs.profiles }}'
         length=$( echo $profiles | jq '.include | length' )
