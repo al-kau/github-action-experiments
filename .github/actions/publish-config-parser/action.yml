@@ -25,10 +25,10 @@ runs:
       run: |
         config=${{ inputs.config-file }}
 
-        echo "project-file=$(jq ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
-        echo "output-name=$(jq ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
+        echo "project-file=$(jq -r ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
+        echo "output-name=$(jq -r ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
 
-        profiles=$(jq '[ .profiles[] | {os, runtime, configuration, framework, options} ]' $config)
+        profiles=$(jq -r '[ .profiles[] | {os, runtime, configuration, framework, options} ]' $config)
 
 
         echo "profiles: $profiles"
