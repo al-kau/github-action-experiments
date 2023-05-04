@@ -53,7 +53,7 @@ jobs:
       uses: ./.github/actions/publish-config-parser
       with:
         config-file: ${{ github.event.inputs.config-file }}
-        filter: ""
+        tags: "${{ github.event.inputs.target-os }},${{ github.event.inputs.target-runtime }}"
 
     - name: Check
       id: check
