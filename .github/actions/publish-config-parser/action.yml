@@ -7,7 +7,7 @@ inputs:
     type: string
   tags:
     type: string
-    default: all
+    default: ""
 
 outputs:
   project-file:
