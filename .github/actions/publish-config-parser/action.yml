@@ -1,13 +1,14 @@
-name: Publish configuration parse
+name: Publish configuration parser.
 
-description: 
+description: It parses json configuration file which contains publish profiles.
 
 inputs:
   config-file:
     type: string
+    required: true
   tags:
     type: string
-    default: ""
+    default: ''
 
 outputs:
   project-file:
@@ -25,12 +26,11 @@ runs:
       shell: bash
       run: |
         config=${{ inputs.config-file }}
-        tags="${{ inputs.tags }}"
 
         echo "project-file=$(jq -r ' ."project-file" ' $config )" >> $GITHUB_OUTPUT
         echo "output-name=$(jq -r ' ."output-name" ' $config )" >> $GITHUB_OUTPUT
 
-        profiles=$(jq -r --arg tags "$tags" '($tags / ",") as $tags | [ .profiles[] | (.tags) as $profile_tags | select(all($tags[]; IN($profile_tags[]))) | {os,runtime,configuration,framework,options} ]' $config)
+        profiles=$(jq -r --arg tags "${{ inputs.tags }}" '($tags / ",") as $tags | [ .profiles[] | (.tags) as $profile_tags | select(all($tags[]; IN($profile_tags[]))) | {os,runtime,configuration,framework,options} ]' $config)
 
         echo "profiles: $profiles"
         echo "profiles={\"include\":$(echo $profiles)}" >> $GITHUB_OUTPUT
