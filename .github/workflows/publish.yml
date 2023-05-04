@@ -62,7 +62,7 @@ jobs:
         echo "project file: ${{ steps.publish-config-parser.outputs.project-file }}"
         echo "output name: ${{ steps.publish-config-parser.outputs.output-name }}"
         
-        profiles=${{ steps.publish-config-parser.outputs.profiles }}
+        profiles='${{ steps.publish-config-parser.outputs.profiles }}'
         length=$( echo $profiles | jq '.include | length' )
 
         if(( $length > 0 )); then
