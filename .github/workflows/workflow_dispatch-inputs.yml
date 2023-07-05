@@ -30,7 +30,7 @@ jobs:
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
         
-    - if: ${{ (env.secret-var != '' || inputs.boolean-var }}
+    - if: ${{ env.secret-var != '' || inputs.boolean-var }}
       name: Ignore Check 
       run: |
         echo "Boolean: ${{ inputs.boolean-var }}"
