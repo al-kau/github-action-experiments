@@ -3,8 +3,9 @@ name: Workflow dispatch input test
 on:
   workflow_dispatch:
     inputs:
-      boolean-var:
-        required: true
+      ignore-var:
+        required: false
+        default: false
         type: boolean
       string-var:
         required: true
@@ -19,20 +20,20 @@ jobs:
     steps:
     - name: Print
       run: |
-        echo "Boolean: ${{ inputs.boolean-var }}"
+        echo "Ignore: ${{ inputs.ignore-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
         
     - if: ${{ env.secret-var != '' }}
       name: Check
       run: |
-        echo "Boolean: ${{ inputs.boolean-var }}"
+        echo "Ignore: ${{ inputs.ignore-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
         
-    - if: ${{ env.secret-var != '' || inputs.boolean-var }}
+    - if: ${{ env.secret-var != '' || inputs.ignore-var }}
       name: Ignore Check 
       run: |
-        echo "Boolean: ${{ inputs.boolean-var }}"
+        echo "Ignore: ${{ inputs.ignore-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
