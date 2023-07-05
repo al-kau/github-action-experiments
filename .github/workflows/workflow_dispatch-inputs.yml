@@ -7,6 +7,10 @@ on:
         required: false
         default: false
         type: boolean
+      check-var:
+        required: false
+        default: false
+        type: boolean        
       string-var:
         required: true
         type: string
@@ -21,19 +25,22 @@ jobs:
     - name: Print
       run: |
         echo "Ignore: ${{ inputs.ignore-var }}"
+        echo "Check: ${{ inputs.check-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
         
     - if: ${{ env.secret-var != '' }}
-      name: Check
+      name: Check Secret
       run: |
         echo "Ignore: ${{ inputs.ignore-var }}"
+        echo "Check: ${{ inputs.check-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
         
-    - if: ${{ env.secret-var != '' || inputs.ignore-var }}
-      name: Ignore Check 
+    - if: ${{ inputs.check-var && ( env.secret-var != '' || inputs.ignore-var ) }}
+      name: Check Ignore  
       run: |
         echo "Ignore: ${{ inputs.ignore-var }}"
+        echo "Check: ${{ inputs.check-var }}"
         echo "String: ${{ inputs.string-var }}"
         echo "Secret: ${{ inputs.secret-var }}"
