@@ -15,6 +15,13 @@ jobs:
   test-workflow:
     runs-on: ubuntu-latest
     steps:
-    - run: |
+    - name: Print
+      run: |
+        echo "Boolean: ${{ inputs.boolean-var }}"
+        echo "String: ${{ inputs.string-var }}"
+        
+    - if: ${{ inputs.boolean-var }}
+      name: Check
+      run: |
         echo "Boolean: ${{ inputs.boolean-var }}"
         echo "String: ${{ inputs.string-var }}"
