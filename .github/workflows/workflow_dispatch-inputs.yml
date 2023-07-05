@@ -11,6 +11,8 @@ on:
         type: string
   pull_request:
 
+env:
+  secret-var: ${{ secrets.SOME_SECRET }}
 jobs:
   test-workflow:
     runs-on: ubuntu-latest
@@ -19,9 +21,18 @@ jobs:
       run: |
         echo "Boolean: ${{ inputs.boolean-var }}"
         echo "String: ${{ inputs.string-var }}"
+        echo "Secret: ${{ inputs.secret-var }}"
         
-    - if: ${{ inputs.boolean-var }}
+    - if: ${{ env.secret-var != '' }}
       name: Check
       run: |
         echo "Boolean: ${{ inputs.boolean-var }}"
         echo "String: ${{ inputs.string-var }}"
+        echo "Secret: ${{ inputs.secret-var }}"
+        
+    - if: ${{ (env.secret-var != '' || inputs.boolean-var }}
+      name: Ignore Check 
+      run: |
+        echo "Boolean: ${{ inputs.boolean-var }}"
+        echo "String: ${{ inputs.string-var }}"
+        echo "Secret: ${{ inputs.secret-var }}"
