@@ -1,0 +1,27 @@
+name: Output Testing
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  prepare:
+    name: Prepare
+    strategy:
+        matrix:
+          value: ${{ fromJSON('["A", "B", "C"]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: mystep
+        run: |
+          res="${{ matrix.value }}"
+          echo "result=$res" > $GITHUB_OUTPUT
+    outputs:
+      result: ${{ steps.mystep.outputs.result || '' }}
+
+  work:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    steps:
+    - run: ${{ tojson(needs) }}
+      shell: cat {0}
