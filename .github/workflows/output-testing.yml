@@ -25,3 +25,5 @@ jobs:
     steps:
     - run: ${{ tojson(needs) }}
       shell: cat {0}
+
+    - run: echo "${{ needs.prepare.outputs.result }}"
