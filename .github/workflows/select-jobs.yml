@@ -15,7 +15,7 @@ jobs:
         run: |
           job_list="${{ join(fromJSON('["job-1", "ignore-job-2", "job-3"]'), ' ') }}"
           echo "$job_list"
-          echo 'list=$job_list' >> "$GITHUB_OUTPUT"
+          echo "list=$job_list" >> "$GITHUB_OUTPUT"
 
   job-0:
     runs-on: ubuntu-latest
