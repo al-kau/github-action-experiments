@@ -13,7 +13,7 @@ jobs:
       - name: Define Jobs
         id: jobs
         run: |
-          job_list="${{ join(fromJSON('["job-1", "ignore-job-2", "job-3"]'), ' ') }}"
+          job_list="${{ join(fromJSON('["job-1", "ignore-job", "job-3"]'), ' ') }}"
           echo "$job_list"
           echo "list=$job_list" >> "$GITHUB_OUTPUT"
 
