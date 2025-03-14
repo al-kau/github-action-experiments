@@ -30,7 +30,7 @@ jobs:
           var1="${{ contains(fromJSON(needs.prepare-matrix.outputs.job-list).*.name, 'job-1') }}"
           var2="${{ contains(fromJSON(needs.prepare-matrix.outputs.job-list).*.name, 'job-3') }}"
 
-          res=$(var1 AND var2)
+          res=($var1 AND $var2)
 
           echo "res: $res"
           
