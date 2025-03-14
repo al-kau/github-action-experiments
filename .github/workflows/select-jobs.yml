@@ -24,6 +24,15 @@ jobs:
       - name: job-0 process
         run: |
           echo "${{ needs.prepare-matrix.outputs.job-list }}"
+
+      - name: job-0 process
+        run: |
+          var1="${{ contains(fromJSON(needs.prepare-matrix.outputs.job-list).*.name, 'job-1') }}"
+          var2="${{ contains(fromJSON(needs.prepare-matrix.outputs.job-list).*.name, 'job-3') }}"
+
+          res=$(var1 AND var2)
+
+          echo "res: $res"
           
   job-1:
     runs-on: ubuntu-latest
