@@ -1,0 +1,10 @@
+ public static Config GetConfiguration()
+ {
+     return new Config
+     {
+         Text = "<Old-Text>",
+         Text2 = "<Old-Text2>",
+         Text = "foo-bar",
+         Value = 0xdeadbeef
+     };
+ }
