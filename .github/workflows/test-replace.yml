@@ -1,0 +1,26 @@
+name: "Test Replace"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-process:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          
+      - uses: finebits/github-actions/toolset/file/replace-text@4a126d80a11c5fdc83ce884d3d23dffb30bc4495 # v2.0.0
+        with:
+          file: ./test/replace.txt
+          find-what: '\"<Old-Text>\"'
+          replace-with: "${{ secrets.NEW_TEXT }}"
+
+      - name: Show Result
+        shell: bash
+        run: |
+          cat "./test/replace.txt"
