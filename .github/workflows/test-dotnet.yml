@@ -7,7 +7,12 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   checks:
-    runs-on: [windows-latest, macos-latest, ubuntu-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+            
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Print dotnet info
