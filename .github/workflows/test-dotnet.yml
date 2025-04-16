@@ -1,6 +1,6 @@
 ---
 
-name: Check the 'toolset/file/read' Action
+name: Test setup dotnet
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
