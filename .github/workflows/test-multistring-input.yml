@@ -1,0 +1,23 @@
+---
+
+name: Test string input
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+   inputs:
+      multistring-value:
+        type: string
+        default: |
+          value1
+          value2
+          value3 value4
+
+jobs:
+
+  verify-string_input:
+    runs-on: ubuntu-latest
+
+    steps:
+      - shell: bash
+        run: |
+          echo "'${{ inputs.multistring-value }}'"
