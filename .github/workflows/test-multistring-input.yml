@@ -20,4 +20,11 @@ jobs:
     steps:
       - shell: bash
         run: |
-          echo "'${{ inputs.multistring-value }}'"
+          echo "1: '${{ inputs.multistring-value }}'"
+          echo "2: '${{ env.TEST_STRING_VALUE }}'"
+          echo "3: '$TEST_STRING_VALUE'"
+        env:
+          TEST_STRING_VALUE: |
+            value1
+            value2
+            value3 value4
