@@ -1,0 +1,16 @@
+name: System info
+on:
+  workflow_dispatch:
+jobs:
+  info:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-24.04-arm, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - shell: bash
+        run: |
+          echo "uname -a: '$(uname -a)'"
+          echo "uname -m: '$(uname -m)'"
+          echo "uname -p: '$(uname -p)'"
+          echo "uname -i: '$(uname -i)'"
