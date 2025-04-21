@@ -14,3 +14,4 @@ jobs:
           echo "uname -m: '$(uname -m)'"
           echo "uname -p: '$(uname -p)'"
           echo "uname -i: '$(uname -i)'"
+          echo "lsb_release --all: '$(lsb_release --all)'"
